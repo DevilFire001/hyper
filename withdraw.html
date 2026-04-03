@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Withdraw — HyperClutch</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --orange:#ff6b00;
+  --orange-bright:#ff8c00;
+  --orange-dim:rgba(255,107,0,0.10);
+  --orange-glow:rgba(255,107,0,0.28);
+  --yellow:#ffd000;
+  --green:#00e676;
+  --green-dim:rgba(0,230,118,0.08);
+  --red:#ff4d4d;
+  --bg:#060407;
+  --bg2:#0c0810;
+  --bg3:#110d18;
+  --bg4:#160f20;
+  --border:rgba(255,255,255,0.07);
+  --border-o:rgba(255,107,0,0.18);
+  --text:#f4f0ee;
+  --text2:rgba(244,240,238,0.55);
+  --text3:rgba(244,240,238,0.28);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:0.5;
+}
+
+.grid-bg{
+  position:fixed;inset:0;z-index:-2;
+  background-image:
+    linear-gradient(rgba(255,107,0,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,107,0,0.025) 1px,transparent 1px);
+  background-size:50px 50px;
+}
+.top-glow{
+  position:fixed;top:-200px;left:50%;transform:translateX(-50%);
+  width:600px;height:500px;
+  background:radial-gradient(ellipse,rgba(255,107,0,0.05) 0%,transparent 70%);
+  pointer-events:none;z-index:-1;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;width:100%;height:62px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;gap:16px;
+  background:rgba(6,4,7,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  z-index:1000;
+}
+.nav-logo{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:20px;font-weight:900;letter-spacing:0.05em;
+  color:var(--text);text-decoration:none;text-transform:uppercase;
+}
+.nav-logo em{color:var(--orange);font-style:normal;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.wallet-pill{
+  display:flex;align-items:center;gap:7px;
+  background:var(--orange-dim);border:1px solid var(--border-o);
+  padding:7px 14px;border-radius:8px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:15px;font-weight:800;color:var(--orange);letter-spacing:0.04em;
+}
+.nav-back{
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;color:var(--text2);text-decoration:none;transition:color 0.2s;
+}
+.nav-back:hover{color:var(--orange);}
+.nav-back svg{width:15px;height:15px;}
+
+/* ── PAGE ── */
+.page{
+  padding:82px 20px 48px;
+  max-width:560px;margin:0 auto;
+  position:relative;z-index:1;
+}
+
+.page-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(28px,5vw,40px);font-weight:900;
+  text-transform:uppercase;letter-spacing:0.02em;margin-bottom:4px;
+}
+.page-title span{color:var(--orange);}
+.page-sub{font-size:13px;color:var(--text2);margin-bottom:24px;}
+
+/* ── WALLET OVERVIEW ── */
+.wallet-overview{
+  background:var(--bg3);border:1px solid var(--border-o);
+  border-radius:14px;padding:20px 24px;
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:0;margin-bottom:20px;
+  position:relative;overflow:hidden;
+}
+.wallet-overview::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--orange),transparent);
+}
+.wo-item{text-align:center;padding:0 8px;}
+.wo-item+.wo-item{border-left:1px solid var(--border);}
+.wo-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;}
+.wo-val{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:24px;font-weight:900;line-height:1;
+}
+.wo-val.orange{color:var(--orange);}
+.wo-val.green{color:var(--green);}
+.wo-val.text{color:var(--text);}
+
+/* ── RULES CARD ── */
+.rules-card{
+  background:rgba(255,208,0,0.05);
+  border:1px solid rgba(255,208,0,0.15);
+  border-radius:12px;padding:14px 16px;
+  margin-bottom:20px;font-size:12px;color:var(--text2);line-height:1.9;
+}
+.rules-card strong{color:var(--yellow);}
+.rules-card ul{list-style:none;padding:0;}
+.rules-card ul li{padding-left:14px;position:relative;}
+.rules-card ul li::before{
+  content:'→';position:absolute;left:0;
+  color:var(--yellow);font-size:10px;top:3px;
+}
+
+/* ── SECTION CARD ── */
+.section-card{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:14px;padding:22px;margin-bottom:16px;
+  position:relative;overflow:hidden;
+}
+.section-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--orange),transparent);
+}
+.card-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:17px;font-weight:800;text-transform:uppercase;
+  letter-spacing:0.04em;margin-bottom:18px;
+  display:flex;align-items:center;gap:8px;
+}
+
+/* ── AMOUNT CHIPS ── */
+.amount-chips{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:8px;margin-bottom:14px;
+}
+.chip{
+  padding:12px 6px;border-radius:8px;
+  background:rgba(255,255,255,0.03);border:1px solid var(--border);
+  text-align:center;cursor:pointer;transition:all 0.2s;
+  font-family:'Barlow Condensed',sans-serif;
+}
+.chip:hover{border-color:var(--border-o);background:var(--orange-dim);}
+.chip.selected{
+  border-color:var(--orange);background:var(--orange-dim);
+  box-shadow:0 0 0 1px var(--orange);
+}
+.chip-amt{
+  font-size:17px;font-weight:900;color:var(--text);display:block;line-height:1;
+}
+.chip-amt.sel{color:var(--orange);}
+.chip-sub{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.04em;}
+
+/* custom amount */
+.custom-wrap{position:relative;margin-bottom:6px;}
+.custom-prefix{
+  position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:800;color:var(--text3);pointer-events:none;
+}
+.custom-input{
+  width:100%;padding:12px 13px 12px 30px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:'Barlow Condensed',sans-serif;
+  font-size:20px;font-weight:800;outline:none;transition:all 0.2s;
+  -webkit-appearance:none;
+}
+.custom-input::placeholder{color:var(--text3);}
+.custom-input:focus{border-color:var(--orange);background:var(--orange-dim);box-shadow:0 0 0 3px rgba(255,107,0,0.08);}
+.custom-input.error{border-color:var(--red);background:rgba(255,77,77,0.05);}
+.amount-hint{font-size:11px;color:var(--text3);letter-spacing:0.02em;}
+.amount-hint.error-hint{color:var(--red);}
+
+/* available balance bar */
+.avail-bar-wrap{margin-top:12px;}
+.avail-bar-header{
+  display:flex;justify-content:space-between;font-size:11px;
+  color:var(--text3);margin-bottom:5px;
+}
+.avail-bar-header span{color:var(--text2);}
+.avail-bar{height:4px;background:var(--border);border-radius:100px;overflow:hidden;}
+.avail-fill{
+  height:100%;border-radius:100px;
+  background:linear-gradient(90deg,var(--green),var(--yellow));
+  transition:width 0.4s ease;
+}
+.avail-fill.high{background:linear-gradient(90deg,var(--orange),var(--red));}
+
+/* ── FIELDS ── */
+.field{margin-bottom:16px;}
+.field:last-of-type{margin-bottom:0;}
+.field-label{
+  display:block;font-size:11px;font-weight:600;
+  letter-spacing:0.10em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:7px;
+}
+.field-wrap{position:relative;}
+.field-icon{
+  position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  font-size:14px;pointer-events:none;opacity:0.4;
+}
+.field input{
+  width:100%;padding:12px 13px 12px 40px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:'DM Sans',sans-serif;
+  font-size:14px;outline:none;transition:all 0.2s;-webkit-appearance:none;
+}
+.field input::placeholder{color:var(--text3);}
+.field input:focus{border-color:var(--orange);background:var(--orange-dim);box-shadow:0 0 0 3px rgba(255,107,0,0.08);}
+.field input.error{border-color:var(--red);background:rgba(255,77,77,0.05);}
+.field input.success{border-color:var(--green);}
+.field input:disabled{opacity:0.55;cursor:not-allowed;}
+.field-hint{font-size:11px;color:var(--text3);margin-top:5px;letter-spacing:0.02em;}
+.field-error{font-size:11px;color:var(--red);margin-top:5px;display:none;}
+
+/* use registered UPI toggle */
+.use-saved{
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:10px;cursor:pointer;
+}
+.use-saved input[type=checkbox]{
+  width:15px;height:15px;accent-color:var(--orange);cursor:pointer;
+}
+.use-saved-label{font-size:12px;color:var(--text2);}
+.use-saved-label strong{color:var(--orange);}
+
+/* ── WITHDRAW BUTTON ── */
+.withdraw-btn{
+  width:100%;padding:15px;margin-top:4px;
+  background:var(--orange);color:#000;
+  border:none;border-radius:8px;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:800;letter-spacing:0.08em;
+  text-transform:uppercase;transition:all 0.25s;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.withdraw-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);
+}
+.withdraw-btn:hover:not(:disabled){
+  background:var(--orange-bright);transform:translateY(-1px);
+  box-shadow:0 8px 28px var(--orange-glow);
+}
+.withdraw-btn:disabled{opacity:0.45;cursor:not-allowed;transform:none;}
+.spinner{
+  width:17px;height:17px;border-radius:50%;
+  border:2px solid rgba(0,0,0,0.3);border-top-color:#000;
+  animation:spin 0.7s linear infinite;display:none;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── PENDING HISTORY ── */
+.history-list{display:flex;flex-direction:column;gap:0;}
+.history-item{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:13px 0;
+  border-bottom:1px solid var(--border);
+}
+.history-item:last-child{border-bottom:none;}
+.hi-left{}
+.hi-amt{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:20px;font-weight:900;color:var(--text);
+  display:block;line-height:1;margin-bottom:3px;
+}
+.hi-meta{font-size:11px;color:var(--text3);letter-spacing:0.02em;}
+.hi-upi{font-size:12px;color:var(--text2);margin-top:2px;}
+.hi-badge{
+  padding:3px 10px;border-radius:100px;
+  font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;
+  white-space:nowrap;flex-shrink:0;
+}
+.badge-pending{background:rgba(255,208,0,0.10);color:var(--yellow);border:1px solid rgba(255,208,0,0.2);}
+.badge-approved{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,230,118,0.2);}
+.badge-rejected{background:rgba(255,77,77,0.08);color:var(--red);border:1px solid rgba(255,77,77,0.18);}
+.badge-processing{background:rgba(59,130,246,0.10);color:#60a5fa;border:1px solid rgba(59,130,246,0.2);}
+
+.no-history{text-align:center;padding:24px;font-size:13px;color:var(--text3);}
+
+/* ── SUCCESS CARD ── */
+.success-card{
+  background:var(--bg3);border:1px solid rgba(0,230,118,0.25);
+  border-radius:14px;padding:32px;text-align:center;display:none;
+  margin-bottom:16px;
+}
+.success-icon{font-size:48px;display:block;margin-bottom:16px;}
+.success-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:26px;font-weight:900;text-transform:uppercase;
+  letter-spacing:0.04em;color:var(--green);margin-bottom:8px;
+}
+.success-sub{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:20px;}
+.success-ref{
+  background:var(--bg4);border:1px solid var(--border);
+  border-radius:8px;padding:12px;font-size:13px;color:var(--text2);margin-bottom:20px;
+}
+.success-ref strong{color:var(--orange);}
+.success-back{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--orange);color:#000;padding:12px 28px;border-radius:8px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:800;letter-spacing:0.08em;
+  text-transform:uppercase;text-decoration:none;transition:all 0.2s;
+}
+.success-back:hover{background:var(--orange-bright);box-shadow:0 0 20px var(--orange-glow);}
+
+/* ── CONFIRM MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.88);
+  backdrop-filter:blur(8px);z-index:5000;
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--bg3);border:1px solid var(--border-o);
+  border-radius:16px;max-width:400px;width:100%;
+  position:relative;overflow:hidden;
+}
+.modal::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--orange),transparent);
+}
+.modal-body{padding:28px;}
+.modal-icon{font-size:40px;text-align:center;display:block;margin-bottom:14px;}
+.modal-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:22px;font-weight:900;text-transform:uppercase;
+  letter-spacing:0.04em;text-align:center;margin-bottom:18px;
+}
+.modal-details{
+  background:var(--bg4);border:1px solid var(--border);
+  border-radius:10px;padding:14px;margin-bottom:18px;
+}
+.modal-row{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);
+}
+.modal-row:last-child{border-bottom:none;padding-bottom:0;}
+.modal-row:first-child{padding-top:0;}
+.modal-row-label{color:var(--text3);}
+.modal-row-val{font-weight:600;color:var(--text);}
+.modal-row-val.orange{color:var(--orange);}
+.modal-row-val.red{color:var(--red);}
+.modal-row-val.green{color:var(--green);}
+
+.modal-warn{
+  background:rgba(255,77,77,0.06);border:1px solid rgba(255,77,77,0.15);
+  border-radius:8px;padding:10px 12px;
+  font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:18px;
+}
+.modal-warn strong{color:var(--red);}
+
+.modal-actions{display:flex;gap:10px;}
+.modal-confirm{
+  flex:1;padding:13px;
+  background:var(--orange);color:#000;
+  border:none;border-radius:8px;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:800;letter-spacing:0.08em;
+  text-transform:uppercase;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.modal-confirm:hover:not(:disabled){background:var(--orange-bright);box-shadow:0 0 20px var(--orange-glow);}
+.modal-confirm:disabled{opacity:0.5;cursor:not-allowed;}
+.modal-spinner{
+  width:16px;height:16px;border-radius:50%;
+  border:2px solid rgba(0,0,0,0.3);border-top-color:#000;
+  animation:spin 0.7s linear infinite;display:none;
+}
+.modal-cancel{
+  padding:13px 20px;background:transparent;color:var(--text2);
+  border:1px solid var(--border);border-radius:8px;cursor:pointer;
+  font-size:14px;transition:all 0.2s;
+}
+.modal-cancel:hover{border-color:rgba(255,255,255,0.15);color:var(--text);}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--bg3);border:1px solid var(--border);
+  padding:14px 24px;border-radius:10px;
+  font-size:13px;font-weight:500;
+  display:flex;align-items:center;gap:10px;
+  z-index:10000;opacity:0;max-width:90vw;
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast.t-success{border-color:rgba(0,230,118,0.3);color:var(--green);}
+.toast.t-error{border-color:rgba(255,77,77,0.3);color:var(--red);}
+.toast.t-info{border-color:var(--border-o);color:var(--orange);}
+.toast.t-warn{border-color:rgba(255,208,0,0.3);color:var(--yellow);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:480px){
+  nav{padding:0 16px;}
+  .page{padding:74px 14px 40px;}
+  .amount-chips{grid-template-columns:repeat(4,1fr);}
+  .wallet-overview{grid-template-columns:1fr;}
+  .wo-item+.wo-item{border-left:none;border-top:1px solid var(--border);padding-top:12px;margin-top:8px;}
+  .modal-body{padding:20px;}
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="top-glow"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">Hyper<em>Clutch</em></a>
+  <div class="nav-right">
+    <div class="wallet-pill">💰 ₹<span id="nav-wallet">0</span></div>
+    <a href="dashboard.html" class="nav-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M5 12l7-7M5 12l7 7"/>
+      </svg>
+      Dashboard
+    </a>
+  </div>
+</nav>
+
+<!-- PAGE -->
+<div class="page">
+
+  <div class="page-title">💸 With<span>draw</span></div>
+  <div class="page-sub">Winnings sent to your UPI within 24 hours of admin approval.</div>
+
+  <!-- WALLET OVERVIEW -->
+  <div class="wallet-overview">
+    <div class="wo-item">
+      <div class="wo-label">Available Balance</div>
+      <div class="wo-val orange">₹<span id="wallet-available">0</span></div>
+    </div>
+    <div class="wo-item">
+      <div class="wo-label">Total Withdrawn</div>
+      <div class="wo-val green">₹<span id="total-withdrawn">0</span></div>
+    </div>
+    <div class="wo-item">
+      <div class="wo-label">Pending</div>
+      <div class="wo-val text">₹<span id="pending-amount">0</span></div>
+    </div>
+  </div>
+
+  <!-- RULES -->
+  <div class="rules-card">
+    <strong>⚠️ Withdrawal Rules</strong>
+    <ul>
+      <li>Minimum withdrawal amount is <strong>₹50</strong></li>
+      <li>Maximum per request is <strong>₹5,000</strong></li>
+      <li>Only one pending request allowed at a time</li>
+      <li>UPI ID must be active and match your registered name</li>
+      <li>Processing time: <strong>within 24 hours</strong> (usually faster)</li>
+      <li>Rejected requests will show the reason below</li>
+    </ul>
+  </div>
+
+  <!-- SUCCESS CARD (hidden until submit) -->
+  <div class="success-card" id="success-card">
+    <span class="success-icon">✅</span>
+    <div class="success-title">Request Submitted!</div>
+    <div class="success-sub">
+      Your withdrawal request is under review. Funds will be sent to your UPI within
+      <strong style="color:var(--orange)">24 hours</strong>. You'll be notified via WhatsApp.
+    </div>
+    <div class="success-ref">
+      Request ID: <strong id="success-ref-id">—</strong><br>
+      Amount: <strong id="success-amount">—</strong><br>
+      UPI: <strong id="success-upi">—</strong>
+    </div>
+    <a href="dashboard.html" class="success-back">← Back to Dashboard</a>
+  </div>
+
+  <!-- STEP 1: AMOUNT -->
+  <div class="section-card" id="amount-card">
+    <div class="card-title">💰 Select Amount</div>
+
+    <div class="amount-chips">
+      <div class="chip" onclick="selectChip(this,50)">
+        <span class="chip-amt">₹50</span>
+        <span class="chip-sub">Min</span>
+      </div>
+      <div class="chip" onclick="selectChip(this,100)">
+        <span class="chip-amt">₹100</span>
+        <span class="chip-sub">2x Win</span>
+      </div>
+      <div class="chip" onclick="selectChip(this,200)">
+        <span class="chip-amt">₹200</span>
+        <span class="chip-sub">Popular</span>
+      </div>
+      <div class="chip" onclick="selectChip(this,500)">
+        <span class="chip-amt">₹500</span>
+        <span class="chip-sub">Big Win</span>
+      </div>
+    </div>
+
+    <div class="custom-wrap">
+      <span class="custom-prefix">₹</span>
+      <input
+        type="number"
+        class="custom-input"
+        id="custom-amount"
+        placeholder="Custom amount"
+        min="50" max="5000"
+        oninput="onCustomInput()"
+      >
+    </div>
+    <div class="amount-hint" id="amount-hint">Min ₹50 · Max ₹5,000</div>
+
+    <div class="avail-bar-wrap" id="avail-bar-wrap" style="display:none;">
+      <div class="avail-bar-header">
+        <span>Withdrawing</span>
+        <span id="avail-pct-text">0% of balance</span>
+      </div>
+      <div class="avail-bar">
+        <div class="avail-fill" id="avail-fill" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: UPI DETAILS -->
+  <div class="section-card" id="upi-card">
+    <div class="card-title">📱 UPI Details</div>
+
+    <!-- Use saved UPI -->
+    <label class="use-saved">
+      <input type="checkbox" id="use-saved-upi" onchange="toggleSavedUPI()">
+      <span class="use-saved-label">Use my registered UPI: <strong id="saved-upi-display">—</strong></span>
+    </label>
+
+    <!-- UPI ID field -->
+    <div class="field" id="field-upi">
+      <label class="field-label">UPI ID</label>
+      <div class="field-wrap">
+        <span class="field-icon">💳</span>
+        <input
+          type="text"
+          id="f-upi"
+          placeholder="yourname@upi or 9876543210@ybl"
+          oninput="validateUPI()"
+        >
+      </div>
+      <div class="field-hint">Must be the UPI ID linked to your bank account.</div>
+      <div class="field-error" id="err-upi">Enter a valid UPI ID (e.g. name@upi or phone@ybl)</div>
+    </div>
+
+    <!-- Account holder name -->
+    <div class="field" id="field-name">
+      <label class="field-label">Account Holder Name</label>
+      <div class="field-wrap">
+        <span class="field-icon">👤</span>
+        <input
+          type="text"
+          id="f-name"
+          placeholder="Name as on your bank account"
+          oninput="clearErr('name')"
+        >
+      </div>
+      <div class="field-hint">Must match the name registered on your UPI.</div>
+      <div class="field-error" id="err-name">Please enter the account holder name.</div>
+    </div>
+
+    <button class="withdraw-btn" id="withdraw-btn" onclick="openConfirmModal()">
+      <span id="withdraw-btn-text">Request Withdrawal →</span>
+      <div class="spinner" id="withdraw-spinner"></div>
+    </button>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="section-card" id="history-card" style="display:none;">
+    <div class="card-title">📋 Withdrawal History</div>
+    <div class="history-list" id="history-list">
+      <div class="no-history">No withdrawal requests yet.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirm-modal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-body">
+      <span class="modal-icon">💸</span>
+      <div class="modal-title">Confirm Withdrawal</div>
+
+      <div class="modal-details">
+        <div class="modal-row">
+          <span class="modal-row-label">Amount</span>
+          <span class="modal-row-val orange" id="modal-amount">₹0</span>
+        </div>
+        <div class="modal-row">
+          <span class="modal-row-label">UPI ID</span>
+          <span class="modal-row-val" id="modal-upi">—</span>
+        </div>
+        <div class="modal-row">
+          <span class="modal-row-label">Account Name</span>
+          <span class="modal-row-val" id="modal-name">—</span>
+        </div>
+        <div class="modal-row">
+          <span class="modal-row-label">Balance After</span>
+          <span class="modal-row-val green" id="modal-after">₹0</span>
+        </div>
+      </div>
+
+      <div class="modal-warn">
+        <strong>⚠️ Important:</strong> Please double-check your UPI ID. Incorrect UPI IDs may result in failed transfers. HyperClutch is not responsible for transfers to wrong UPI IDs.
+      </div>
+
+      <div class="modal-actions">
+        <button class="modal-confirm" id="modal-confirm-btn" onclick="confirmWithdraw()">
+          <span id="modal-btn-text">Confirm →</span>
+          <div class="modal-spinner" id="modal-spinner"></div>
+        </button>
+        <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+<script>
+// Firebase
+const firebaseConfig = {
+  apiKey:"AIzaSyDIA2I6-htEdMxbxxsqKkeUlq86vJjOpRo",
+  authDomain:"hyperclutch.firebaseapp.com",
+  projectId:"hyperclutch",
+  databaseURL:"https://hyperclutch-default-rtdb.firebaseio.com/",
+  appId:"1:781538384038:web:002bb30ad711c3deb3fc67"
+};
+if(!firebase.apps.length){ firebase.initializeApp(firebaseConfig); }
+const auth      = firebase.auth();
+const rtdb      = firebase.database();
+const firestore = firebase.firestore();
+
+// State
+let currentUser    = null;
+let walletBalance  = 0;
+let selectedAmount = 0;
+let savedUPI       = '';
+let savedName      = '';
+let totalWithdrawn = 0;
+let pendingTotal   = 0;
+let hasPending     = false;
+
+// ── AUTH GUARD ──
+auth.onAuthStateChanged(async user => {
+  if(!user){ window.location.href = 'login.html'; return; }
+  currentUser = user;
+
+  // Load wallet
+  rtdb.ref('users/' + user.uid + '/wallet').on('value', snap => {
+    walletBalance = Math.max(snap.val() || 0, 0);
+    document.getElementById('wallet-available').textContent = walletBalance;
+    document.getElementById('nav-wallet').textContent       = walletBalance;
+    updateAmountBar();
+  });
+
+  // Load profile
+  try {
+    const doc  = await firestore.collection('users').doc(user.uid).get();
+    if(doc.exists){
+      const data = doc.data();
+      savedUPI   = data.upi || (data.phone ? data.phone + '@upi' : '');
+      savedName  = data.username || '';
+
+      document.getElementById('saved-upi-display').textContent = savedUPI || 'Not set';
+
+      // Auto-fill if available
+      if(savedUPI){
+        document.getElementById('use-saved-upi').checked = true;
+        document.getElementById('f-upi').value           = savedUPI;
+        document.getElementById('f-upi').disabled        = true;
+      }
+      if(savedName){
+        document.getElementById('f-name').value = savedName;
+      }
+    }
+  } catch(e){ console.error(e); }
+
+  loadHistory();
+});
+
+// ── CHIPS ──
+function selectChip(el, amount){
+  document.querySelectorAll('.chip').forEach(c => {
+    c.classList.remove('selected');
+    const a = c.querySelector('.chip-amt');
+    if(a) a.classList.remove('sel');
+  });
+  el.classList.add('selected');
+  el.querySelector('.chip-amt').classList.add('sel');
+  document.getElementById('custom-amount').value = '';
+  setAmount(amount);
+}
+
+function onCustomInput(){
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  const val = parseInt(document.getElementById('custom-amount').value);
+  if(val >= 50 && val <= 5000){
+    setAmount(val);
+  } else {
+    setAmount(0);
+    const hint = document.getElementById('amount-hint');
+    if(val && val < 50){  hint.textContent='❌ Minimum withdrawal is ₹50'; hint.className='amount-hint error-hint'; }
+    else if(val > 5000){  hint.textContent='❌ Maximum per request is ₹5,000'; hint.className='amount-hint error-hint'; }
+    else { hint.textContent='Min ₹50 · Max ₹5,000'; hint.className='amount-hint'; }
+    document.getElementById('avail-bar-wrap').style.display='none';
+  }
+}
+
+function setAmount(amount){
+  selectedAmount = amount;
+  const hint = document.getElementById('amount-hint');
+
+  if(amount < 50){
+    hint.textContent='Min ₹50 · Max ₹5,000'; hint.className='amount-hint';
+    document.getElementById('avail-bar-wrap').style.display='none';
+    return;
+  }
+  if(amount > walletBalance){
+    hint.textContent='❌ Amount exceeds your available balance (₹'+walletBalance+')';
+    hint.className='amount-hint error-hint';
+    document.getElementById('avail-bar-wrap').style.display='none';
+    return;
+  }
+
+  hint.textContent='Min ₹50 · Max ₹5,000'; hint.className='amount-hint';
+  updateAmountBar();
+}
+
+function updateAmountBar(){
+  if(!selectedAmount || !walletBalance){ return; }
+  const pct  = Math.min((selectedAmount / walletBalance) * 100, 100);
+  const fill = document.getElementById('avail-fill');
+  fill.style.width = pct + '%';
+  fill.className   = 'avail-fill' + (pct > 80 ? ' high' : '');
+  document.getElementById('avail-pct-text').textContent = Math.round(pct) + '% of balance';
+  document.getElementById('avail-bar-wrap').style.display = 'block';
+}
+
+// ── TOGGLE SAVED UPI ──
+function toggleSavedUPI(){
+  const checked = document.getElementById('use-saved-upi').checked;
+  const inp     = document.getElementById('f-upi');
+  if(checked && savedUPI){
+    inp.value    = savedUPI;
+    inp.disabled = true;
+    clearErr('upi');
+  } else {
+    inp.value    = '';
+    inp.disabled = false;
+    inp.focus();
+  }
+}
+
+// ── VALIDATION ──
+function validateUPI(){
+  const val = document.getElementById('f-upi').value.trim();
+  const ok  = /^[\w.\-+]+@[\w]+$/.test(val);
+  const inp = document.getElementById('f-upi');
+  const err = document.getElementById('err-upi');
+  if(!ok && val !== ''){ inp.classList.add('error'); err.style.display='block'; }
+  else { inp.classList.remove('error'); err.style.display='none'; if(ok) inp.classList.add('success'); }
+  return ok;
+}
+
+function clearErr(id){
+  const inp = document.getElementById('f-'+id);
+  const err = document.getElementById('err-'+id);
+  if(inp){ inp.classList.remove('error'); }
+  if(err){ err.style.display='none'; }
+}
+
+function showErr(id, msg){
+  const inp = document.getElementById('f-'+id);
+  const err = document.getElementById('err-'+id);
+  if(inp){ inp.classList.add('error'); inp.focus(); }
+  if(err){ if(msg) err.textContent=msg; err.style.display='block'; }
+}
+
+// ── OPEN CONFIRM MODAL ──
+function openConfirmModal(){
+  // Validate amount
+  if(!selectedAmount || selectedAmount < 50){
+    showToast('⚠️ Please select an amount (min ₹50).','t-warn'); return;
+  }
+  if(selectedAmount > 5000){
+    showToast('⚠️ Maximum per request is ₹5,000.','t-warn'); return;
+  }
+  if(selectedAmount > walletBalance){
+    showToast('❌ Amount exceeds your wallet balance (₹'+walletBalance+').','t-error'); return;
+  }
+
+  // Validate UPI
+  const upi = document.getElementById('f-upi').value.trim();
+  if(!validateUPI() || !upi){
+    showErr('upi','Please enter a valid UPI ID.');
+    showToast('❌ Please enter a valid UPI ID.','t-error'); return;
+  }
+
+  // Validate name
+  const name = document.getElementById('f-name').value.trim();
+  if(!name){
+    showErr('name','Please enter the account holder name.');
+    showToast('❌ Please enter your account holder name.','t-error'); return;
+  }
+
+  // Check for existing pending request
+  if(hasPending){
+    showToast('⚠️ You already have a pending withdrawal. Wait for it to be processed.','t-warn'); return;
+  }
+
+  // Populate modal
+  document.getElementById('modal-amount').textContent = '₹' + selectedAmount;
+  document.getElementById('modal-upi').textContent    = upi;
+  document.getElementById('modal-name').textContent   = name;
+  document.getElementById('modal-after').textContent  = '₹' + (walletBalance - selectedAmount);
+
+  document.getElementById('confirm-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(){
+  document.getElementById('confirm-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeModalOutside(e){
+  if(e.target === document.getElementById('confirm-modal')) closeModal();
+}
+
+// ── CONFIRM WITHDRAW ──
+async function confirmWithdraw(){
+  const upi  = document.getElementById('f-upi').value.trim();
+  const name = document.getElementById('f-name').value.trim();
+
+  const btn  = document.getElementById('modal-confirm-btn');
+  const text = document.getElementById('modal-btn-text');
+  const spin = document.getElementById('modal-spinner');
+  btn.disabled=true; text.textContent='Processing...'; spin.style.display='block';
+
+  try {
+    // Final balance check
+    const snap = await rtdb.ref('users/' + currentUser.uid + '/wallet').once('value');
+    const live  = snap.val() || 0;
+    if(selectedAmount > live){
+      closeModal();
+      showToast('❌ Insufficient balance. Your balance may have changed.','t-error');
+      return;
+    }
+
+    // Check for existing pending
+    const existing = await firestore.collection('withdrawRequests')
+      .where('uid','==',currentUser.uid)
+      .where('status','==','pending')
+      .get();
+
+    if(!existing.empty){
+      closeModal();
+      showToast('⚠️ You already have a pending request. Please wait.','t-warn');
+      hasPending = true;
+      return;
+    }
+
+    // Generate request ID
+    const reqId = 'WD' + Date.now();
+
+    // Save request to Firestore
+    await firestore.collection('withdrawRequests').doc(reqId).set({
+      uid:       currentUser.uid,
+      email:     currentUser.email || '',
+      amount:    selectedAmount,
+      upi:       upi,
+      name:      name,
+      status:    'pending',
+      adminNote: '',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      id:        reqId,
+    });
+
+    // Show success state
+    closeModal();
+    document.getElementById('amount-card').style.display = 'none';
+    document.getElementById('upi-card').style.display   = 'none';
+
+    document.getElementById('success-ref-id').textContent = reqId;
+    document.getElementById('success-amount').textContent = '₹' + selectedAmount;
+    document.getElementById('success-upi').textContent    = upi;
+    document.getElementById('success-card').style.display = 'block';
+
+    // Reload history
+    loadHistory();
+
+  } catch(err){
+    console.error(err);
+    closeModal();
+    btn.disabled=false; text.textContent='Confirm →'; spin.style.display='none';
+    let msg = '❌ Request failed. Please try again.';
+    if(err.code === 'permission-denied') msg = '❌ Permission denied. Please log in again.';
+    if(err.code === 'unavailable')       msg = '❌ No internet connection.';
+    showToast(msg,'t-error');
+  }
+}
+
+// ── LOAD HISTORY ──
+async function loadHistory(){
+  try {
+    const snap = await firestore.collection('withdrawRequests')
+      .where('uid','==',currentUser.uid)
+      .orderBy('createdAt','desc')
+      .limit(10)
+      .get();
+
+    if(snap.empty) return;
+
+    const card = document.getElementById('history-card');
+    const list = document.getElementById('history-list');
+    card.style.display = 'block';
+
+    let withdrawn = 0;
+    let pending   = 0;
+    hasPending    = false;
+
+    list.innerHTML = snap.docs.map(doc => {
+      const d   = doc.data();
+      const ts  = d.createdAt ? new Date(d.createdAt.seconds * 1000).toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'}) : '—';
+
+      if(d.status === 'approved') withdrawn += d.amount;
+      if(d.status === 'pending'){ pending += d.amount; hasPending = true; }
+
+      const badgeCls = {
+        pending:'badge-pending', approved:'badge-approved',
+        rejected:'badge-rejected', processing:'badge-processing'
+      }[d.status] || 'badge-pending';
+
+      const badgeTxt = {
+        pending:'⏳ Pending', approved:'✓ Paid',
+        rejected:'✗ Rejected', processing:'↻ Processing'
+      }[d.status] || 'Pending';
+
+      return `
+        <div class="history-item">
+          <div class="hi-left">
+            <span class="hi-amt">₹${d.amount}</span>
+            <div class="hi-upi">${d.upi}</div>
+            <div class="hi-meta">${ts} · ID: ${d.id || doc.id}</div>
+            ${d.adminNote ? `<div class="hi-meta" style="color:var(--yellow);margin-top:2px;">Note: ${d.adminNote}</div>` : ''}
+          </div>
+          <span class="hi-badge ${badgeCls}">${badgeTxt}</span>
+        </div>`;
+    }).join('');
+
+    // Update totals
+    document.getElementById('total-withdrawn').textContent = withdrawn;
+    document.getElementById('pending-amount').textContent  = pending;
+
+  } catch(e){ console.error(e); }
+}
+
+// ── TOAST ──
+function showToast(msg, type='t-success'){
+  const t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 5000);
+}
+
+// Escape closes modal
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') closeModal();
+});
+</script>
+</body>
+</html>
