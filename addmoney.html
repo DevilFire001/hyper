@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Add Money — HyperClutch Wallet</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --orange:#ff6b00;
+  --orange-bright:#ff8c00;
+  --orange-dim:rgba(255,107,0,0.10);
+  --orange-glow:rgba(255,107,0,0.28);
+  --yellow:#ffd000;
+  --green:#00e676;
+  --green-dim:rgba(0,230,118,0.08);
+  --red:#ff4d4d;
+  --bg:#060407;
+  --bg2:#0c0810;
+  --bg3:#110d18;
+  --bg4:#160f20;
+  --border:rgba(255,255,255,0.07);
+  --border-o:rgba(255,107,0,0.18);
+  --text:#f4f0ee;
+  --text2:rgba(244,240,238,0.55);
+  --text3:rgba(244,240,238,0.28);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:0.5;
+}
+
+.grid-bg{
+  position:fixed;inset:0;z-index:-2;
+  background-image:
+    linear-gradient(rgba(255,107,0,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,107,0,0.025) 1px,transparent 1px);
+  background-size:50px 50px;
+}
+.top-glow{
+  position:fixed;top:-200px;left:50%;transform:translateX(-50%);
+  width:600px;height:500px;
+  background:radial-gradient(ellipse,rgba(255,107,0,0.06) 0%,transparent 70%);
+  pointer-events:none;z-index:-1;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;width:100%;height:62px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;gap:16px;
+  background:rgba(6,4,7,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  z-index:1000;
+}
+.nav-logo{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:20px;font-weight:900;letter-spacing:0.05em;
+  color:var(--text);text-decoration:none;text-transform:uppercase;
+}
+.nav-logo em{color:var(--orange);font-style:normal;}
+
+.nav-right{display:flex;align-items:center;gap:12px;}
+
+.wallet-pill{
+  display:flex;align-items:center;gap:7px;
+  background:var(--orange-dim);border:1px solid var(--border-o);
+  padding:7px 14px;border-radius:8px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:15px;font-weight:800;color:var(--orange);
+  letter-spacing:0.04em;
+}
+
+.nav-back{
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;color:var(--text2);text-decoration:none;transition:color 0.2s;
+}
+.nav-back:hover{color:var(--orange);}
+.nav-back svg{width:15px;height:15px;}
+
+/* ── PAGE ── */
+.page{
+  padding:82px 20px 48px;
+  max-width:560px;margin:0 auto;
+  position:relative;z-index:1;
+}
+
+/* ── PAGE TITLE ── */
+.page-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(28px,5vw,40px);font-weight:900;
+  text-transform:uppercase;letter-spacing:0.02em;
+  margin-bottom:4px;
+}
+.page-title span{color:var(--orange);}
+.page-sub{font-size:13px;color:var(--text2);margin-bottom:24px;}
+
+/* ── WALLET BALANCE CARD ── */
+.wallet-card{
+  background:var(--bg3);border:1px solid var(--border-o);
+  border-radius:14px;padding:20px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;
+  margin-bottom:20px;
+  position:relative;overflow:hidden;
+}
+.wallet-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--orange),transparent);
+}
+.wallet-card::after{
+  content:'';position:absolute;right:-20px;bottom:-20px;
+  width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,107,0,0.06),transparent 70%);
+  pointer-events:none;
+}
+.wc-label{font-size:11px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+.wc-balance{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:36px;font-weight:900;color:var(--orange);
+  letter-spacing:0.02em;line-height:1;
+}
+.wc-right{text-align:right;}
+.wc-upi-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;}
+.wc-upi{
+  font-family:'Rajdhani',sans-serif;
+  font-size:14px;font-weight:700;color:var(--text2);
+}
+
+/* ── STEPS BAR ── */
+.steps-bar{
+  display:flex;align-items:center;
+  margin-bottom:24px;
+  gap:0;
+}
+.step-item{
+  display:flex;align-items:center;gap:6px;flex:1;
+}
+.step-circle{
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:800;
+  border:1.5px solid var(--border);
+  color:var(--text3);background:var(--bg3);
+  transition:all 0.3s;
+}
+.step-circle.active{
+  border-color:var(--orange);color:var(--orange);
+  background:var(--orange-dim);
+}
+.step-circle.done{
+  border-color:var(--green);color:#000;
+  background:var(--green);
+}
+.step-label{font-size:11px;color:var(--text3);letter-spacing:0.04em;transition:color 0.3s;}
+.step-label.active{color:var(--orange);}
+.step-label.done{color:var(--green);}
+.step-line{flex:1;height:1px;background:var(--border);margin:0 8px;transition:background 0.3s;}
+.step-line.done{background:var(--green);}
+
+/* ── SECTION CARD ── */
+.section-card{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:14px;padding:22px;
+  margin-bottom:16px;
+  position:relative;overflow:hidden;
+  transition:border-color 0.2s;
+}
+.section-card.active-card{border-color:var(--border-o);}
+.section-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--orange),transparent);
+  opacity:0;transition:opacity 0.3s;
+}
+.section-card.active-card::before{opacity:1;}
+
+.card-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:17px;font-weight:800;text-transform:uppercase;
+  letter-spacing:0.04em;margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;
+}
+.step-num-badge{
+  width:22px;height:22px;border-radius:6px;
+  background:var(--orange-dim);border:1px solid var(--border-o);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:var(--orange);flex-shrink:0;
+}
+
+/* ── AMOUNT CHIPS ── */
+.amount-chips{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:8px;margin-bottom:16px;
+}
+.chip{
+  padding:14px 8px;border-radius:8px;
+  background:rgba(255,255,255,0.03);border:1px solid var(--border);
+  text-align:center;cursor:pointer;transition:all 0.2s;
+  font-family:'Barlow Condensed',sans-serif;
+}
+.chip:hover{border-color:var(--border-o);background:var(--orange-dim);}
+.chip.selected{
+  border-color:var(--orange);background:var(--orange-dim);
+  box-shadow:0 0 0 1px var(--orange);
+}
+.chip-amt{
+  font-size:20px;font-weight:900;color:var(--text);
+  display:block;line-height:1;margin-bottom:3px;
+}
+.chip-amt.selected-text{color:var(--orange);}
+.chip-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;}
+.chip-tag{
+  display:inline-block;background:var(--orange-dim);color:var(--orange);
+  border:1px solid var(--border-o);padding:1px 6px;border-radius:4px;
+  font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;
+  margin-top:3px;
+}
+
+/* custom amount */
+.custom-wrap{position:relative;}
+.custom-prefix{
+  position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:800;color:var(--text3);pointer-events:none;
+}
+.custom-input{
+  width:100%;padding:12px 13px 12px 30px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:'Barlow Condensed',sans-serif;
+  font-size:20px;font-weight:800;outline:none;transition:all 0.2s;
+  -webkit-appearance:none;
+}
+.custom-input::placeholder{color:var(--text3);}
+.custom-input:focus{border-color:var(--orange);background:var(--orange-dim);box-shadow:0 0 0 3px rgba(255,107,0,0.08);}
+.custom-hint{font-size:11px;color:var(--text3);margin-top:6px;letter-spacing:0.02em;}
+
+/* ── QR SECTION ── */
+.qr-wrap{
+  display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;
+}
+.qr-box{
+  flex-shrink:0;
+  width:160px;height:160px;border-radius:12px;
+  border:1px solid var(--border-o);
+  background:white;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;position:relative;
+}
+.qr-box img{width:100%;height:100%;object-fit:contain;display:block;}
+.qr-placeholder{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  width:100%;height:100%;gap:8px;
+}
+.qr-placeholder-icon{font-size:32px;opacity:0.3;}
+.qr-placeholder-text{font-size:11px;color:var(--text3);text-align:center;letter-spacing:0.06em;}
+
+.qr-info{flex:1;min-width:200px;}
+.qr-info-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 0;border-bottom:1px solid var(--border);
+  font-size:13px;
+}
+.qr-info-row:first-child{padding-top:0;}
+.qr-info-row:last-child{border-bottom:none;padding-bottom:0;}
+.qr-info-label{color:var(--text3);}
+.qr-info-val{font-weight:600;color:var(--text);}
+.qr-info-val.orange{color:var(--orange);}
+.qr-info-val.green{color:var(--green);}
+
+.upi-copy-row{
+  display:flex;align-items:center;gap:8px;
+  margin-top:12px;padding:10px 12px;
+  background:var(--bg4);border:1px solid var(--border);border-radius:8px;
+}
+.upi-id-text{
+  flex:1;font-family:'Rajdhani',sans-serif;
+  font-size:15px;font-weight:700;color:var(--orange);
+  letter-spacing:0.04em;word-break:break-all;
+}
+.copy-btn{
+  background:var(--orange-dim);border:1px solid var(--border-o);
+  color:var(--orange);padding:5px 12px;border-radius:6px;
+  font-size:12px;font-weight:600;cursor:pointer;
+  transition:all 0.2s;white-space:nowrap;flex-shrink:0;
+}
+.copy-btn:hover{background:rgba(255,107,0,0.18);}
+
+.pay-now-btn{
+  width:100%;padding:13px;margin-top:12px;
+  background:var(--green);color:#000;
+  border:none;border-radius:8px;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:17px;font-weight:800;letter-spacing:0.08em;
+  text-transform:uppercase;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.pay-now-btn:hover{background:#00cb68;box-shadow:0 0 20px rgba(0,230,118,0.25);}
+.pay-now-btn:disabled{opacity:0.4;cursor:not-allowed;}
+
+/* ── FORM FIELDS ── */
+.field{margin-bottom:14px;}
+.field-label{
+  display:block;font-size:11px;font-weight:600;
+  letter-spacing:0.10em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:7px;
+}
+.field-wrap{position:relative;}
+.field-icon{
+  position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  font-size:14px;pointer-events:none;opacity:0.4;
+}
+.field input{
+  width:100%;padding:12px 13px 12px 40px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:'DM Sans',sans-serif;
+  font-size:14px;outline:none;transition:all 0.2s;-webkit-appearance:none;
+}
+.field input::placeholder{color:var(--text3);}
+.field input:focus{border-color:var(--orange);background:var(--orange-dim);box-shadow:0 0 0 3px rgba(255,107,0,0.08);}
+.field input.error{border-color:var(--red);background:rgba(255,77,77,0.05);}
+.field input.success{border-color:var(--green);}
+.field-hint{font-size:11px;color:var(--text3);margin-top:5px;letter-spacing:0.02em;}
+.field-error{font-size:11px;color:var(--red);margin-top:5px;display:none;}
+
+/* screenshot upload */
+.upload-wrap{
+  border:1.5px dashed var(--border);border-radius:8px;
+  padding:20px;text-align:center;cursor:pointer;
+  transition:all 0.2s;position:relative;
+}
+.upload-wrap:hover{border-color:var(--border-o);background:var(--orange-dim);}
+.upload-wrap.has-file{border-color:var(--green);border-style:solid;background:var(--green-dim);}
+.upload-icon{font-size:24px;display:block;margin-bottom:8px;}
+.upload-label{font-size:13px;color:var(--text2);display:block;margin-bottom:4px;}
+.upload-sub{font-size:11px;color:var(--text3);}
+.upload-input{
+  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
+}
+.upload-preview{
+  max-width:100%;border-radius:6px;margin-top:10px;
+  max-height:160px;object-fit:contain;display:none;
+}
+
+/* ── SUBMIT BTN ── */
+.submit-btn{
+  width:100%;padding:15px;margin-top:4px;
+  background:var(--orange);color:#000;
+  border:none;border-radius:8px;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:800;letter-spacing:0.08em;
+  text-transform:uppercase;transition:all 0.25s;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.submit-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);
+}
+.submit-btn:hover:not(:disabled){
+  background:var(--orange-bright);transform:translateY(-1px);
+  box-shadow:0 8px 28px var(--orange-glow);
+}
+.submit-btn:disabled{opacity:0.45;cursor:not-allowed;transform:none;}
+.spinner{
+  width:17px;height:17px;border-radius:50%;
+  border:2px solid rgba(0,0,0,0.3);border-top-color:#000;
+  animation:spin 0.7s linear infinite;display:none;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── SUCCESS STATE ── */
+.success-card{
+  background:var(--bg3);border:1px solid rgba(0,230,118,0.25);
+  border-radius:14px;padding:32px;text-align:center;
+  display:none;
+}
+.success-icon{font-size:48px;display:block;margin-bottom:16px;}
+.success-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:26px;font-weight:900;text-transform:uppercase;
+  letter-spacing:0.04em;color:var(--green);margin-bottom:8px;
+}
+.success-sub{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:20px;}
+.success-ref{
+  background:var(--bg4);border:1px solid var(--border);
+  border-radius:8px;padding:12px;
+  font-size:13px;color:var(--text2);margin-bottom:20px;
+}
+.success-ref strong{color:var(--orange);}
+.success-back{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--orange);color:#000;
+  padding:12px 28px;border-radius:8px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:800;letter-spacing:0.08em;
+  text-transform:uppercase;text-decoration:none;
+  transition:all 0.2s;
+}
+.success-back:hover{background:var(--orange-bright);box-shadow:0 0 20px var(--orange-glow);}
+
+/* ── INFO NOTE ── */
+.info-note{
+  background:rgba(255,208,0,0.06);border:1px solid rgba(255,208,0,0.15);
+  border-radius:10px;padding:14px 16px;
+  font-size:12px;color:var(--text2);line-height:1.8;
+  margin-bottom:16px;
+}
+.info-note strong{color:var(--yellow);}
+
+/* pending requests */
+.pending-item{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:12px 0;
+  border-bottom:1px solid var(--border);
+  font-size:13px;
+}
+.pending-item:last-child{border-bottom:none;}
+.pending-amt{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:17px;font-weight:800;color:var(--orange);
+}
+.pending-badge{
+  padding:3px 10px;border-radius:100px;
+  font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;
+}
+.badge-pending{background:rgba(255,208,0,0.1);color:var(--yellow);border:1px solid rgba(255,208,0,0.2);}
+.badge-approved{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,230,118,0.2);}
+.badge-rejected{background:rgba(255,77,77,0.08);color:var(--red);border:1px solid rgba(255,77,77,0.18);}
+
+.pending-meta{color:var(--text3);font-size:11px;margin-top:2px;}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--bg3);border:1px solid var(--border);
+  padding:14px 24px;border-radius:10px;
+  font-size:13px;font-weight:500;
+  display:flex;align-items:center;gap:10px;
+  z-index:10000;opacity:0;max-width:90vw;
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast.t-success{border-color:rgba(0,230,118,0.3);color:var(--green);}
+.toast.t-error{border-color:rgba(255,77,77,0.3);color:var(--red);}
+.toast.t-info{border-color:var(--border-o);color:var(--orange);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:480px){
+  nav{padding:0 16px;}
+  .page{padding:74px 14px 40px;}
+  .qr-wrap{flex-direction:column;align-items:center;}
+  .qr-info{width:100%;}
+  .amount-chips{grid-template-columns:repeat(3,1fr);}
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="top-glow"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">Hyper<em>Clutch</em></a>
+  <div class="nav-right">
+    <div class="wallet-pill">💰 ₹<span id="nav-wallet">0</span></div>
+    <a href="dashboard.html" class="nav-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M5 12l7-7M5 12l7 7"/>
+      </svg>
+      Dashboard
+    </a>
+  </div>
+</nav>
+
+<!-- PAGE -->
+<div class="page">
+
+  <div class="page-title">💳 Add <span>Money</span></div>
+  <div class="page-sub">Top up your wallet to join tournaments. UPI only. Manual verification.</div>
+
+  <!-- WALLET BALANCE -->
+  <div class="wallet-card">
+    <div>
+      <div class="wc-label">Current Balance</div>
+      <div class="wc-balance">₹<span id="wallet-balance">0</span></div>
+    </div>
+    <div class="wc-right">
+      <div class="wc-upi-label">Your UPI (Prize Payout)</div>
+      <div class="wc-upi" id="user-upi">—</div>
+    </div>
+  </div>
+
+  <!-- STEPS BAR -->
+  <div class="steps-bar">
+    <div class="step-item">
+      <div class="step-circle active" id="sc1">1</div>
+      <div class="step-label active" id="sl1">Choose Amount</div>
+    </div>
+    <div class="step-line" id="line1"></div>
+    <div class="step-item">
+      <div class="step-circle" id="sc2">2</div>
+      <div class="step-label" id="sl2">Pay via UPI</div>
+    </div>
+    <div class="step-line" id="line2"></div>
+    <div class="step-item">
+      <div class="step-circle" id="sc3">3</div>
+      <div class="step-label" id="sl3">Submit Proof</div>
+    </div>
+  </div>
+
+  <!-- ── STEP 1: AMOUNT ── -->
+  <div class="section-card active-card" id="step1-card">
+    <div class="card-title"><span class="step-num-badge">1</span> Choose Amount</div>
+
+    <div class="amount-chips">
+      <div class="chip" onclick="selectChip(this, 20)">
+        <span class="chip-amt">₹20</span>
+        <span class="chip-label">1 Match</span>
+      </div>
+      <div class="chip" onclick="selectChip(this, 50)">
+        <span class="chip-amt">₹50</span>
+        <span class="chip-label">2 Matches</span>
+      </div>
+      <div class="chip" onclick="selectChip(this, 100)">
+        <span class="chip-amt">₹100</span>
+        <span class="chip-label">5 Matches</span>
+        <span class="chip-tag">Popular</span>
+      </div>
+      <div class="chip" onclick="selectChip(this, 200)">
+        <span class="chip-amt">₹200</span>
+        <span class="chip-label">10 Matches</span>
+      </div>
+      <div class="chip" onclick="selectChip(this, 500)">
+        <span class="chip-amt">₹500</span>
+        <span class="chip-label">25 Matches</span>
+        <span class="chip-tag">Best Value</span>
+      </div>
+      <div class="chip" id="custom-chip" onclick="focusCustom()">
+        <span class="chip-amt" style="font-size:16px;">Custom</span>
+        <span class="chip-label">Any amount</span>
+      </div>
+    </div>
+
+    <div class="custom-wrap">
+      <span class="custom-prefix">₹</span>
+      <input
+        type="number"
+        class="custom-input"
+        id="custom-amount"
+        placeholder="Enter amount"
+        min="10" max="10000"
+        oninput="onCustomInput()"
+      >
+    </div>
+    <div class="custom-hint">Minimum ₹10 · Maximum ₹10,000 per transaction</div>
+  </div>
+
+  <!-- ── STEP 2: PAY VIA UPI ── -->
+  <div class="section-card" id="step2-card">
+    <div class="card-title"><span class="step-num-badge">2</span> Pay via UPI</div>
+
+    <div class="info-note">
+      <strong>⚠️ Important:</strong> Pay the <strong>exact amount</strong> shown below. Do not round off.
+      After payment, note your <strong>UTR / Transaction ID</strong> from your UPI app.
+    </div>
+
+    <div class="qr-wrap">
+      <div class="qr-box">
+        <div class="qr-placeholder" id="qr-placeholder">
+          <span class="qr-placeholder-icon">📱</span>
+          <span class="qr-placeholder-text">Select amount<br>to see QR</span>
+        </div>
+        <img id="qr-img" style="display:none;" alt="UPI QR Code">
+      </div>
+
+      <div class="qr-info">
+        <div class="qr-info-row">
+          <span class="qr-info-label">Pay To</span>
+          <span class="qr-info-val">HyperClutch</span>
+        </div>
+        <div class="qr-info-row">
+          <span class="qr-info-label">Amount</span>
+          <span class="qr-info-val orange" id="qr-amount">₹—</span>
+        </div>
+        <div class="qr-info-row">
+          <span class="qr-info-label">Method</span>
+          <span class="qr-info-val">Any UPI App</span>
+        </div>
+        <div class="qr-info-row">
+          <span class="qr-info-label">Verified</span>
+          <span class="qr-info-val green">✓ Manual within 1hr</span>
+        </div>
+
+        <div class="upi-copy-row">
+          <span class="upi-id-text" id="upi-display-id">7983646407-2@ybl</span>
+          <button class="copy-btn" onclick="copyUPI()">Copy</button>
+        </div>
+
+        <button class="pay-now-btn" id="pay-now-btn" onclick="payNow()" disabled>
+          📲 Open UPI App & Pay
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 3: SUBMIT PROOF ── -->
+  <div class="section-card" id="step3-card">
+    <div class="card-title"><span class="step-num-badge">3</span> Submit Payment Proof</div>
+
+    <div class="info-note" style="margin-bottom:14px;">
+      After paying, fill in the details below. Your wallet will be credited within <strong>1 hour</strong> after admin verification.
+    </div>
+
+    <!-- UTR Number -->
+    <div class="field" id="field-utr">
+      <label class="field-label">UTR / Transaction ID</label>
+      <div class="field-wrap">
+        <span class="field-icon">🔢</span>
+        <input type="text" id="f-utr" placeholder="e.g. 123456789012" maxlength="25" oninput="clearErr('utr')">
+      </div>
+      <div class="field-hint">Found in your UPI app under transaction history.</div>
+      <div class="field-error" id="err-utr">Please enter a valid UTR/Transaction ID.</div>
+    </div>
+
+    <!-- Phone -->
+    <div class="field" id="field-phone">
+      <label class="field-label">UPI Mobile Number Used</label>
+      <div class="field-wrap">
+        <span class="field-icon">📱</span>
+        <input type="tel" id="f-phone" placeholder="10-digit number you paid from" maxlength="10" oninput="clearErr('phone')">
+      </div>
+      <div class="field-hint">The mobile number linked to the UPI account you paid from.</div>
+      <div class="field-error" id="err-phone">Enter a valid 10-digit Indian mobile number.</div>
+    </div>
+
+    <!-- Screenshot upload -->
+    <div class="field">
+      <label class="field-label">Payment Screenshot <span style="color:var(--text3);font-weight:400;">(Optional but recommended)</span></label>
+      <div class="upload-wrap" id="upload-wrap">
+        <input type="file" class="upload-input" id="f-screenshot" accept="image/*" onchange="handleFileUpload(this)">
+        <span class="upload-icon" id="upload-icon">📸</span>
+        <span class="upload-label" id="upload-label">Tap to upload screenshot</span>
+        <span class="upload-sub">JPG, PNG · Max 5MB</span>
+        <img id="upload-preview" class="upload-preview" alt="Preview">
+      </div>
+    </div>
+
+    <!-- Amount confirmation -->
+    <div class="field">
+      <label class="field-label">Amount Paid</label>
+      <div class="field-wrap">
+        <span class="field-icon">💰</span>
+        <input type="text" id="f-amount-display" readonly style="opacity:0.7;cursor:not-allowed;">
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submit-btn" onclick="submitRequest()">
+      <span id="submit-text">Submit Payment Request</span>
+      <div class="spinner" id="submit-spinner"></div>
+    </button>
+  </div>
+
+  <!-- ── SUCCESS ── -->
+  <div class="success-card" id="success-card">
+    <span class="success-icon">✅</span>
+    <div class="success-title">Request Submitted!</div>
+    <div class="success-sub">
+      Your payment proof has been received. Our admin will verify and credit your wallet within <strong style="color:var(--orange)">1 hour</strong>.
+      You'll be notified via WhatsApp.
+    </div>
+    <div class="success-ref">
+      Reference ID: <strong id="success-ref-id">—</strong><br>
+      Amount: <strong id="success-amount">—</strong>
+    </div>
+    <a href="dashboard.html" class="success-back">← Back to Dashboard</a>
+  </div>
+
+  <!-- ── PENDING REQUESTS ── -->
+  <div class="section-card" id="pending-section" style="display:none;">
+    <div class="card-title">📋 My Recent Requests</div>
+    <div id="pending-list"></div>
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
+<script>
+// Firebase
+const firebaseConfig = {
+  apiKey:"AIzaSyDIA2I6-htEdMxbxxsqKkeUlq86vJjOpRo",
+  authDomain:"hyperclutch.firebaseapp.com",
+  databaseURL:"https://hyperclutch-default-rtdb.firebaseio.com/",
+  projectId:"hyperclutch",
+  appId:"1:781538384038:web:002bb30ad711c3deb3fc67"
+};
+if(!firebase.apps.length){ firebase.initializeApp(firebaseConfig); }
+const auth      = firebase.auth();
+const rtdb      = firebase.database();
+const firestore = firebase.firestore();
+
+// UPI config — update this when you change UPI ID
+const UPI_ID   = '7983646407-2@ybl';
+const UPI_NAME = 'HyperClutch';
+
+// State
+let currentUser     = null;
+let selectedAmount  = 0;
+let uploadedFile    = null;
+let currentStep     = 1;
+
+// ── AUTH GUARD ──
+auth.onAuthStateChanged(async user => {
+  if(!user){ window.location.href = 'login.html'; return; }
+  currentUser = user;
+
+  // Load wallet balance
+  rtdb.ref('users/' + user.uid + '/wallet').on('value', snap => {
+    const bal = snap.val() || 0;
+    document.getElementById('wallet-balance').textContent = bal;
+    document.getElementById('nav-wallet').textContent = bal;
+  });
+
+  // Load UPI ID from profile
+  try {
+    const doc = await firestore.collection('users').doc(user.uid).get();
+    if(doc.exists){
+      const data = doc.data();
+      const upi  = data.upi || (data.phone ? data.phone + '@upi' : '—');
+      document.getElementById('user-upi').textContent = upi;
+
+      // Pre-fill phone from profile
+      if(data.phone){
+        document.getElementById('f-phone').value = data.phone;
+      }
+    }
+  } catch(e){ console.error(e); }
+
+  // Load recent requests
+  loadPendingRequests();
+});
+
+// ── SELECT CHIP ──
+function selectChip(el, amount){
+  document.querySelectorAll('.chip').forEach(c => {
+    c.classList.remove('selected');
+    c.querySelector('.chip-amt').classList.remove('selected-text');
+  });
+  el.classList.add('selected');
+  el.querySelector('.chip-amt').classList.add('selected-text');
+  document.getElementById('custom-amount').value = '';
+  setAmount(amount);
+}
+
+function focusCustom(){
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  document.getElementById('custom-chip').classList.add('selected');
+  document.getElementById('custom-amount').focus();
+}
+
+function onCustomInput(){
+  const val = parseInt(document.getElementById('custom-amount').value);
+  if(val >= 10 && val <= 10000){
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+    document.getElementById('custom-chip').classList.add('selected');
+    setAmount(val);
+  } else {
+    setAmount(0);
+  }
+}
+
+// ── SET AMOUNT ──
+function setAmount(amount){
+  selectedAmount = amount;
+
+  if(amount < 10){
+    document.getElementById('qr-amount').textContent = '₹—';
+    document.getElementById('qr-placeholder').style.display = 'flex';
+    document.getElementById('qr-img').style.display = 'none';
+    document.getElementById('pay-now-btn').disabled = true;
+    document.getElementById('f-amount-display').value = '';
+    setStep(1);
+    return;
+  }
+
+  // Update QR
+  const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR`;
+  const qrUrl   = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiLink)}`;
+
+  document.getElementById('qr-placeholder').style.display = 'none';
+  const qrImg = document.getElementById('qr-img');
+  qrImg.src = qrUrl;
+  qrImg.style.display = 'block';
+  document.getElementById('qr-amount').textContent = '₹' + amount;
+  document.getElementById('pay-now-btn').disabled = false;
+  document.getElementById('f-amount-display').value = '₹' + amount;
+
+  // Advance step
+  if(currentStep === 1) setStep(2);
+}
+
+// ── PAY NOW ──
+function payNow(){
+  if(!selectedAmount || selectedAmount < 10){
+    showToast('⚠️ Please select an amount first.','t-info'); return;
+  }
+  const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${selectedAmount}&cu=INR`;
+  window.location.href = upiLink;
+  setTimeout(() => {
+    showToast('✅ Returned from UPI app? Now fill in your UTR below.','t-info');
+    setStep(3);
+  }, 2500);
+}
+
+// ── COPY UPI ──
+function copyUPI(){
+  navigator.clipboard.writeText(UPI_ID)
+    .then(() => showToast('✅ UPI ID copied: ' + UPI_ID, 't-success'))
+    .catch(() => showToast('❌ Could not copy. Copy manually: ' + UPI_ID, 't-error'));
+}
+
+// ── STEP MANAGEMENT ──
+function setStep(step){
+  currentStep = step;
+
+  // Step circles
+  for(let i=1; i<=3; i++){
+    const sc = document.getElementById('sc'+i);
+    const sl = document.getElementById('sl'+i);
+    if(i < step){
+      sc.className = 'step-circle done'; sc.textContent = '✓';
+      sl.className = 'step-label done';
+    } else if(i === step){
+      sc.className = 'step-circle active'; sc.textContent = i;
+      sl.className = 'step-label active';
+    } else {
+      sc.className = 'step-circle'; sc.textContent = i;
+      sl.className = 'step-label';
+    }
+  }
+
+  // Lines
+  document.getElementById('line1').className = 'step-line' + (step > 1 ? ' done' : '');
+  document.getElementById('line2').className = 'step-line' + (step > 2 ? ' done' : '');
+
+  // Cards
+  document.getElementById('step1-card').classList.toggle('active-card', step===1);
+  document.getElementById('step2-card').classList.toggle('active-card', step===2);
+  document.getElementById('step3-card').classList.toggle('active-card', step===3);
+}
+
+// ── FILE UPLOAD ──
+function handleFileUpload(input){
+  const file = input.files[0];
+  if(!file) return;
+
+  if(file.size > 5 * 1024 * 1024){
+    showToast('❌ File too large. Max 5MB.','t-error');
+    input.value = '';
+    return;
+  }
+
+  uploadedFile = file;
+  const wrap   = document.getElementById('upload-wrap');
+  const prev   = document.getElementById('upload-preview');
+  const label  = document.getElementById('upload-label');
+  const icon   = document.getElementById('upload-icon');
+
+  wrap.classList.add('has-file');
+  icon.textContent = '✅';
+  label.textContent = file.name;
+  prev.style.display = 'block';
+  prev.src = URL.createObjectURL(file);
+  showToast('✅ Screenshot selected.','t-success');
+}
+
+// ── CLEAR ERRORS ──
+function clearErr(id){
+  document.getElementById('f-'+id).classList.remove('error');
+  document.getElementById('err-'+id).style.display = 'none';
+}
+
+function showErr(id, msg){
+  const inp = document.getElementById('f-'+id);
+  const err = document.getElementById('err-'+id);
+  inp.classList.add('error');
+  if(msg) err.textContent = msg;
+  err.style.display = 'block';
+  inp.focus();
+}
+
+// ── SUBMIT REQUEST ──
+async function submitRequest(){
+  if(!selectedAmount || selectedAmount < 10){
+    showToast('⚠️ Please select an amount first.','t-info'); return;
+  }
+
+  const utr   = document.getElementById('f-utr').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+
+  // Validate
+  let hasErr = false;
+  if(!utr || utr.length < 6){
+    showErr('utr','Please enter a valid UTR/Transaction ID (min 6 characters).');
+    hasErr = true;
+  }
+  if(!phone || !/^[6-9]\d{9}$/.test(phone)){
+    showErr('phone','Enter a valid 10-digit Indian mobile number.');
+    hasErr = true;
+  }
+  if(hasErr) return;
+
+  // Loading
+  const btn  = document.getElementById('submit-btn');
+  const text = document.getElementById('submit-text');
+  const spin = document.getElementById('submit-spinner');
+  btn.disabled=true; text.textContent='Submitting...'; spin.style.display='block';
+
+  try {
+    // Check for duplicate UTR
+    const dup = await firestore.collection('paymentRequests')
+      .where('utr','==',utr).get();
+    if(!dup.empty){
+      btn.disabled=false; text.textContent='Submit Payment Request'; spin.style.display='none';
+      showToast('❌ This UTR has already been submitted. Contact support if this is wrong.','t-error');
+      return;
+    }
+
+    // Upload screenshot if provided
+    let screenshotUrl = '';
+    if(uploadedFile && firebase.storage){
+      try {
+        const storage = firebase.storage();
+        const ref = storage.ref(`paymentScreenshots/${currentUser.uid}/${Date.now()}_${uploadedFile.name}`);
+        const snap = await ref.put(uploadedFile);
+        screenshotUrl = await snap.ref.getDownloadURL();
+      } catch(e){ console.warn('Screenshot upload failed:', e); }
+    }
+
+    // Save request
+    const docRef = await firestore.collection('paymentRequests').add({
+      uid:           currentUser.uid,
+      email:         currentUser.email || '',
+      amount:        selectedAmount,
+      phone:         phone,
+      utr:           utr,
+      screenshotUrl: screenshotUrl,
+      status:        'pending',
+      createdAt:     firebase.firestore.FieldValue.serverTimestamp(),
+      adminNote:     '',
+    });
+
+    // Show success
+    document.getElementById('step1-card').style.display = 'none';
+    document.getElementById('step2-card').style.display = 'none';
+    document.getElementById('step3-card').style.display = 'none';
+    document.getElementById('success-ref-id').textContent = docRef.id.slice(0,8).toUpperCase();
+    document.getElementById('success-amount').textContent = '₹' + selectedAmount;
+    document.getElementById('success-card').style.display = 'block';
+
+    // Reload pending
+    loadPendingRequests();
+
+  } catch(err){
+    console.error(err);
+    btn.disabled=false; text.textContent='Submit Payment Request'; spin.style.display='none';
+    let msg = '❌ Submission failed. Please try again.';
+    if(err.code === 'permission-denied') msg = '❌ Permission denied. Please log in again.';
+    if(err.code === 'unavailable')       msg = '❌ No internet. Check your connection.';
+    showToast(msg,'t-error');
+  }
+}
+
+// ── PENDING REQUESTS ──
+async function loadPendingRequests(){
+  try {
+    const snap = await firestore.collection('paymentRequests')
+      .where('uid','==',currentUser.uid)
+      .orderBy('createdAt','desc')
+      .limit(5)
+      .get();
+
+    if(snap.empty) return;
+
+    const section = document.getElementById('pending-section');
+    const list    = document.getElementById('pending-list');
+    section.style.display = 'block';
+
+    list.innerHTML = snap.docs.map(doc => {
+      const d   = doc.data();
+      const ts  = d.createdAt ? new Date(d.createdAt.seconds * 1000).toLocaleDateString('en-IN') : '—';
+      const badgeCls = d.status==='approved' ? 'badge-approved' : d.status==='rejected' ? 'badge-rejected' : 'badge-pending';
+      const badgeTxt = d.status==='approved' ? '✓ Approved' : d.status==='rejected' ? '✗ Rejected' : '⏳ Pending';
+      return `
+        <div class="pending-item">
+          <div>
+            <div class="pending-amt">₹${d.amount}</div>
+            <div class="pending-meta">UTR: ${d.utr} · ${ts}</div>
+            ${d.adminNote ? `<div class="pending-meta" style="color:var(--yellow)">Note: ${d.adminNote}</div>` : ''}
+          </div>
+          <span class="pending-badge ${badgeCls}">${badgeTxt}</span>
+        </div>`;
+    }).join('');
+
+  } catch(e){ console.error(e); }
+}
+
+// ── TOAST ──
+function showToast(msg, type='t-success'){
+  const t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 5000);
+}
+</script>
+</body>
+</html>
