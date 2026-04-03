@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>HyperClutch — Your Game. Your Money.</title>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J2PTX4W724"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-J2PTX4W724');
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --orange:#ff6b00;
+  --orange-bright:#ff8c00;
+  --orange-dim:rgba(255,107,0,0.10);
+  --orange-glow:rgba(255,107,0,0.28);
+  --yellow:#ffd000;
+  --green:#00e676;
+  --red:#ff3d3d;
+  --bg:#060407;
+  --bg2:#0c0810;
+  --bg3:#110d18;
+  --card:rgba(255,255,255,0.03);
+  --border:rgba(255,255,255,0.07);
+  --border-o:rgba(255,107,0,0.18);
+  --text:#f4f0ee;
+  --text2:rgba(244,240,238,0.55);
+  --text3:rgba(244,240,238,0.28);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:0.5;
+}
+
+.grid-bg{
+  position:fixed;inset:0;z-index:-2;
+  background-image:
+    linear-gradient(rgba(255,107,0,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,107,0,0.03) 1px,transparent 1px);
+  background-size:50px 50px;
+}
+
+.top-glow{
+  position:fixed;top:-200px;left:50%;transform:translateX(-50%);
+  width:800px;height:600px;
+  background:radial-gradient(ellipse,rgba(255,107,0,0.07) 0%,transparent 70%);
+  pointer-events:none;z-index:-1;
+}
+
+#cursor-glow{
+  position:fixed;width:350px;height:350px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,107,0,0.05),transparent 70%);
+  pointer-events:none;z-index:0;
+  transform:translate(-50%,-50%);
+  transition:left 0.2s ease,top 0.2s ease;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;width:100%;height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;
+  background:rgba(6,4,7,0.85);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  z-index:1000;
+}
+
+.nav-logo{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:22px;font-weight:900;letter-spacing:0.05em;
+  color:var(--text);text-decoration:none;text-transform:uppercase;
+}
+.nav-logo em{color:var(--orange);font-style:normal;}
+
+.nav-right{display:flex;align-items:center;gap:24px;}
+
+.nav-link{
+  font-size:13px;font-weight:500;letter-spacing:0.04em;
+  color:var(--text2);text-decoration:none;transition:color 0.2s;
+}
+.nav-link:hover{color:var(--orange);}
+
+.nav-btn{
+  background:var(--orange);color:#000;
+  padding:8px 20px;border-radius:4px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:14px;font-weight:800;letter-spacing:0.08em;
+  text-transform:uppercase;text-decoration:none;
+  transition:all 0.2s;
+}
+.nav-btn:hover{background:var(--orange-bright);box-shadow:0 0 20px var(--orange-glow);}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  padding:80px 40px 60px;
+  max-width:1280px;margin:0 auto;
+  gap:60px;position:relative;z-index:1;
+}
+
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,230,118,0.08);
+  border:1px solid rgba(0,230,118,0.20);
+  padding:5px 14px;border-radius:100px;
+  font-size:11px;font-weight:500;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--green);margin-bottom:22px;
+}
+.hero-tag::before{
+  content:'';display:block;width:6px;height:6px;border-radius:50%;
+  background:var(--green);animation:pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(0.8)}}
+
+.hero h1{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(52px,6.5vw,88px);
+  font-weight:900;line-height:0.95;
+  letter-spacing:-0.01em;text-transform:uppercase;margin-bottom:24px;
+}
+.hero h1 .t1{display:block;color:var(--text);}
+.hero h1 .t2{
+  display:block;color:var(--orange);
+  text-shadow:0 0 40px rgba(255,107,0,0.4);
+}
+.hero h1 .t3{display:block;color:var(--text);opacity:0.9;}
+
+.hero-sub{
+  font-size:15px;font-weight:300;color:var(--text2);
+  line-height:1.9;max-width:460px;margin-bottom:36px;
+}
+.hero-sub strong{color:var(--orange);font-weight:500;}
+
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:44px;}
+
+.btn-fire{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--orange);color:#000;
+  padding:14px 30px;border-radius:6px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:800;letter-spacing:0.08em;
+  text-transform:uppercase;text-decoration:none;
+  border:none;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden;
+}
+.btn-fire::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);
+}
+.btn-fire:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 32px var(--orange-glow);
+  background:var(--orange-bright);
+}
+
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;color:var(--text);
+  padding:14px 28px;border-radius:6px;
+  border:1px solid var(--border-o);
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:700;letter-spacing:0.08em;
+  text-transform:uppercase;text-decoration:none;
+  cursor:pointer;transition:all 0.2s;
+}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-dim);}
+
+.hero-stats{
+  display:flex;gap:0;
+  border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;background:var(--card);
+}
+.stat{
+  flex:1;padding:16px 12px;
+  border-right:1px solid var(--border);text-align:center;
+}
+.stat:last-child{border-right:none;}
+.stat-n{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:26px;font-weight:900;color:var(--orange);
+  display:block;letter-spacing:0.02em;
+}
+.stat-l{
+  font-size:10px;font-weight:500;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--text3);
+  display:block;margin-top:3px;
+}
+
+/* HERO RIGHT */
+.hero-right{
+  position:relative;display:flex;flex-direction:column;gap:16px;
+}
+
+.game-visual{
+  position:relative;border-radius:16px;overflow:hidden;
+  border:1px solid var(--border-o);
+  box-shadow:0 0 60px rgba(255,107,0,0.12);
+}
+.game-visual img{
+  width:100%;height:340px;object-fit:cover;
+  display:block;filter:brightness(0.8) saturate(1.3);
+}
+.game-visual-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(6,4,7,0.95) 0%,rgba(6,4,7,0.2) 50%,transparent 100%);
+}
+
+.game-badge{
+  position:absolute;top:16px;left:16px;
+  background:rgba(6,4,7,0.75);
+  border:1px solid var(--border-o);backdrop-filter:blur(8px);
+  padding:6px 14px;border-radius:100px;
+  font-size:11px;font-weight:600;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--orange);
+  display:flex;align-items:center;gap:6px;
+}
+.game-badge::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--orange);display:block;animation:pulse 1.8s ease-in-out infinite;
+}
+
+.game-info{position:absolute;bottom:16px;left:16px;right:16px;}
+.game-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:30px;font-weight:900;letter-spacing:0.02em;
+  text-transform:uppercase;margin-bottom:4px;
+}
+.game-meta{font-size:12px;color:var(--text2);letter-spacing:0.06em;}
+
+.live-card{
+  background:var(--bg3);border:1px solid var(--border-o);
+  border-radius:12px;padding:18px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.live-tag{
+  font-size:10px;font-weight:700;letter-spacing:0.15em;
+  text-transform:uppercase;color:var(--green);
+  display:flex;align-items:center;gap:5px;margin-bottom:6px;
+}
+.live-tag::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:var(--green);display:block;animation:pulse 1.8s ease-in-out infinite;
+}
+.live-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:17px;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;
+}
+.live-meta{font-size:12px;color:var(--text2);margin-top:3px;}
+.live-prize-amt{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:22px;font-weight:900;color:var(--yellow);
+  display:block;letter-spacing:0.02em;
+}
+.live-prize-label{font-size:10px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;}
+.live-join{
+  background:var(--orange);color:#000;
+  padding:10px 18px;border-radius:6px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:14px;font-weight:800;letter-spacing:0.08em;
+  text-transform:uppercase;text-decoration:none;
+  transition:all 0.2s;white-space:nowrap;border:none;cursor:pointer;
+}
+.live-join:hover{background:var(--orange-bright);box-shadow:0 0 20px var(--orange-glow);}
+
+/* TOURNAMENTS */
+.tournaments{
+  padding:100px 40px;max-width:1280px;margin:0 auto;
+  position:relative;z-index:1;
+}
+.section-eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--orange);
+  margin-bottom:12px;display:block;
+}
+.section-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(36px,4.5vw,58px);
+  font-weight:900;text-transform:uppercase;
+  letter-spacing:-0.01em;line-height:1.0;margin-bottom:48px;
+}
+.section-title span{color:var(--orange);}
+
+.tournament-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+
+.t-card{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:14px;overflow:hidden;transition:all 0.25s;
+}
+.t-card:hover{
+  border-color:var(--border-o);transform:translateY(-4px);
+  box-shadow:0 16px 48px rgba(255,107,0,0.10);
+}
+.t-card-img{position:relative;height:150px;overflow:hidden;}
+.t-card-img img{
+  width:100%;height:100%;object-fit:cover;
+  filter:brightness(0.7) saturate(1.3);transition:transform 0.4s;
+}
+.t-card:hover .t-card-img img{transform:scale(1.05);}
+.t-card-img-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 40%,var(--bg3) 100%);
+}
+.t-status{
+  position:absolute;top:12px;left:12px;
+  padding:4px 10px;border-radius:100px;
+  font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+}
+.status-open{background:rgba(0,230,118,0.15);color:var(--green);border:1px solid rgba(0,230,118,0.25);}
+.status-tonight{background:rgba(255,107,0,0.15);color:var(--orange);border:1px solid rgba(255,107,0,0.25);}
+.status-soon{background:rgba(255,61,61,0.12);color:var(--red);border:1px solid rgba(255,61,61,0.2);}
+
+.t-card-body{padding:18px;}
+.t-game-tag{
+  font-size:10px;font-weight:600;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--text3);
+  margin-bottom:6px;display:block;
+}
+.t-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:20px;font-weight:800;text-transform:uppercase;
+  letter-spacing:0.03em;margin-bottom:14px;
+}
+.t-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 0;border-top:1px solid var(--border);font-size:12px;
+}
+.t-row-label{color:var(--text3);font-weight:500;letter-spacing:0.04em;}
+.t-row-val{font-weight:600;color:var(--text);}
+.t-row-val.prize{color:var(--yellow);}
+.t-row-val.entry{color:var(--orange);}
+.slots-bar{height:3px;background:var(--border);border-radius:100px;overflow:hidden;margin-top:10px;}
+.slots-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--orange),var(--yellow));}
+.t-card-footer{
+  padding:14px 18px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.t-slots{font-size:12px;color:var(--text3);}
+.t-slots strong{color:var(--text);font-weight:600;}
+.t-join-btn{
+  background:var(--orange);color:#000;
+  padding:8px 18px;border-radius:5px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:800;letter-spacing:0.08em;
+  text-transform:uppercase;text-decoration:none;
+  border:none;cursor:pointer;transition:all 0.2s;
+}
+.t-join-btn:hover{background:var(--orange-bright);box-shadow:0 0 16px var(--orange-glow);}
+.t-join-btn.disabled{
+  background:var(--border);color:var(--text3);
+  cursor:not-allowed;pointer-events:none;
+}
+
+/* TRUST */
+.trust{
+  padding:100px 40px;max-width:1280px;margin:0 auto;
+  position:relative;z-index:1;
+}
+.trust-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.trust-card{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:12px;padding:28px 24px;text-align:center;transition:all 0.25s;
+}
+.trust-card:hover{border-color:var(--border-o);box-shadow:0 8px 32px rgba(255,107,0,0.07);}
+.trust-icon{font-size:28px;margin-bottom:14px;display:block;}
+.trust-num{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:38px;font-weight:900;color:var(--orange);
+  display:block;letter-spacing:0.02em;line-height:1;margin-bottom:6px;
+}
+.trust-label{
+  font-size:12px;font-weight:500;letter-spacing:0.08em;
+  text-transform:uppercase;color:var(--text3);
+}
+
+/* WHATSAPP */
+.wa-section{
+  padding:80px 40px;
+  background:var(--bg2);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  position:relative;z-index:1;
+}
+.wa-inner{
+  max-width:1280px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:40px;flex-wrap:wrap;
+}
+.wa-left h2{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(32px,4vw,52px);
+  font-weight:900;text-transform:uppercase;
+  letter-spacing:-0.01em;line-height:1.05;margin-bottom:12px;
+}
+.wa-left h2 span{color:#25d366;}
+.wa-left p{font-size:14px;color:var(--text2);max-width:480px;line-height:1.8;}
+.btn-wa{
+  display:inline-flex;align-items:center;gap:12px;
+  background:#25d366;color:#000;
+  padding:16px 32px;border-radius:8px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:800;letter-spacing:0.06em;
+  text-transform:uppercase;text-decoration:none;
+  transition:all 0.2s;white-space:nowrap;flex-shrink:0;
+}
+.btn-wa:hover{background:#1ebe5d;box-shadow:0 8px 32px rgba(37,211,102,0.25);transform:translateY(-2px);}
+.wa-icon{width:24px;height:24px;flex-shrink:0;}
+
+/* HOW */
+.how{
+  padding:100px 40px;
+  background:var(--bg2);border-top:1px solid var(--border);
+  position:relative;z-index:1;
+}
+.how-inner{max-width:1280px;margin:0 auto;}
+.how-steps{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0;margin-top:56px;
+  border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;background:var(--border);
+}
+.how-step{
+  background:var(--bg);padding:32px 28px;transition:background 0.2s;
+}
+.how-step:hover{background:var(--bg3);}
+.how-step-num{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:56px;font-weight:900;
+  color:rgba(255,107,0,0.12);line-height:1;
+  margin-bottom:20px;display:block;
+}
+.how-step-icon{font-size:22px;margin-bottom:14px;display:block;}
+.how-step-title{
+  font-family:'Rajdhani',sans-serif;
+  font-size:17px;font-weight:700;margin-bottom:10px;
+  letter-spacing:0.04em;text-transform:uppercase;
+}
+.how-step-desc{font-size:13px;color:var(--text2);line-height:1.8;}
+
+/* FOOTER */
+footer{
+  border-top:1px solid var(--border);padding:40px;
+  position:relative;z-index:1;
+}
+.footer-inner{
+  max-width:1280px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:20px;
+}
+.footer-logo{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:20px;font-weight:900;letter-spacing:0.05em;
+  text-transform:uppercase;color:var(--text);
+}
+.footer-logo em{color:var(--orange);font-style:normal;}
+.footer-tagline{font-size:12px;color:var(--text3);letter-spacing:0.06em;margin-top:4px;}
+.footer-links{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.footer-links a{
+  font-size:12px;color:var(--text3);text-decoration:none;
+  letter-spacing:0.06em;transition:color 0.2s;
+}
+.footer-links a:hover{color:var(--orange);}
+.footer-copy{font-size:11px;color:var(--text3);letter-spacing:0.06em;text-align:right;}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.65s ease,transform 0.65s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .tournament-grid{grid-template-columns:1fr 1fr;}
+  .trust-grid{grid-template-columns:1fr 1fr;}
+  .how-steps{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:768px){
+  .hero{grid-template-columns:1fr;padding:80px 20px 50px;gap:40px;}
+  .hero-right{order:-1;}
+  nav{padding:0 16px;}
+  .nav-link{display:none;}
+  .tournaments,.trust{padding:70px 20px;}
+  .tournament-grid{grid-template-columns:1fr;}
+  .how{padding:70px 20px;}
+  .how-steps{grid-template-columns:1fr 1fr;}
+  .wa-section{padding:60px 20px;}
+  footer{padding:30px 20px;}
+  .footer-inner{flex-direction:column;align-items:flex-start;}
+  .footer-copy{text-align:left;}
+  .footer-links{align-items:flex-start;}
+}
+@media(max-width:480px){
+  .hero-stats{flex-wrap:wrap;}
+  .stat{width:50%;border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
+  .stat:nth-child(2){border-right:none;}
+  .stat:nth-child(3){border-bottom:none;}
+  .stat:nth-child(4){border-right:none;border-bottom:none;}
+  .trust-grid{grid-template-columns:1fr 1fr;}
+  .how-steps{grid-template-columns:1fr;}
+  .hero-actions{flex-direction:column;}
+  .btn-fire,.btn-ghost{justify-content:center;}
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="top-glow"></div>
+<div id="cursor-glow"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">Hyper<em>Clutch</em></a>
+  <div class="nav-right">
+    <a href="#tournaments" class="nav-link">Tournaments</a>
+    <a href="#how" class="nav-link">How It Works</a>
+    <a href="https://instagram.com/_hyperclutch" target="_blank" class="nav-link">Instagram</a>
+    <a href="signup.html" class="nav-btn">Join Now</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-tag">🔥 Free Fire · Daily 7 PM Tournaments</div>
+    <h1>
+      <span class="t1">Your Game.</span>
+      <span class="t2">Your Money.</span>
+      <span class="t3">Real Cash.</span>
+    </h1>
+    <p class="hero-sub">
+      HyperClutch is India's rising skill-based Free Fire tournament platform.
+      Pay <strong>₹20 entry</strong>, compete against real players, and take home
+      real cash prizes — no luck, no gambling, pure skill.
+    </p>
+    <div class="hero-actions">
+      <a href="signup.html" class="btn-fire">🎮 Join for ₹20 →</a>
+      <a href="#how" class="btn-ghost">How it works</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-n">₹800</span>
+        <span class="stat-l">Prize Pool</span>
+      </div>
+      <div class="stat">
+        <span class="stat-n">₹20</span>
+        <span class="stat-l">Entry Fee</span>
+      </div>
+      <div class="stat">
+        <span class="stat-n">15+</span>
+        <span class="stat-l">Players</span>
+      </div>
+      <div class="stat">
+        <span class="stat-n">7 PM</span>
+        <span class="stat-l">Daily Match</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right reveal">
+    <div class="game-visual">
+      <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=80" alt="Free Fire Tournament">
+      <div class="game-visual-overlay"></div>
+      <div class="game-badge">Live Platform</div>
+      <div class="game-info">
+        <div class="game-title">Free Fire</div>
+        <div class="game-meta">Battle Royale · Daily Tournaments · Real Prizes</div>
+      </div>
+    </div>
+    <div class="live-card">
+      <div>
+        <div class="live-tag">Tonight's Match</div>
+        <div class="live-name">Daily Solo Battle #01</div>
+        <div class="live-meta">🕖 7:00 PM &nbsp;·&nbsp; Free Fire &nbsp;·&nbsp; Solo</div>
+      </div>
+      <div style="text-align:right;">
+        <span class="live-prize-amt">₹800</span>
+        <span class="live-prize-label">Prize Pool</span>
+      </div>
+      <a href="signup.html" class="live-join">Join →</a>
+    </div>
+  </div>
+</section>
+
+<!-- TOURNAMENTS -->
+<section class="tournaments" id="tournaments">
+  <span class="section-eyebrow reveal">Active Tournaments</span>
+  <h2 class="section-title reveal">Tonight's <span>Battles</span></h2>
+
+  <div class="tournament-grid">
+    <div class="t-card reveal">
+      <div class="t-card-img">
+        <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&q=80" alt="Solo">
+        <div class="t-card-img-overlay"></div>
+        <div class="t-status status-open">Open</div>
+      </div>
+      <div class="t-card-body">
+        <span class="t-game-tag">Free Fire · Solo</span>
+        <div class="t-name">Solo Showdown</div>
+        <div class="t-row"><span class="t-row-label">Entry Fee</span><span class="t-row-val entry">₹20</span></div>
+        <div class="t-row"><span class="t-row-label">Prize Pool</span><span class="t-row-val prize">₹800</span></div>
+        <div class="t-row"><span class="t-row-label">Time</span><span class="t-row-val">7:00 PM Today</span></div>
+        <div class="slots-bar"><div class="slots-fill" style="width:30%"></div></div>
+      </div>
+      <div class="t-card-footer">
+        <span class="t-slots"><strong>35</strong> slots left</span>
+        <a href="signup.html" class="t-join-btn">Join Now</a>
+      </div>
+    </div>
+
+    <div class="t-card reveal" style="transition-delay:0.1s">
+      <div class="t-card-img">
+        <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=600&q=80" alt="Squad">
+        <div class="t-card-img-overlay"></div>
+        <div class="t-status status-tonight">Filling Fast</div>
+      </div>
+      <div class="t-card-body">
+        <span class="t-game-tag">Free Fire · Squad</span>
+        <div class="t-name">Squad War</div>
+        <div class="t-row"><span class="t-row-label">Entry Fee</span><span class="t-row-val entry">₹20/player</span></div>
+        <div class="t-row"><span class="t-row-label">Prize Pool</span><span class="t-row-val prize">₹800</span></div>
+        <div class="t-row"><span class="t-row-label">Time</span><span class="t-row-val">7:00 PM Today</span></div>
+        <div class="slots-bar"><div class="slots-fill" style="width:60%"></div></div>
+      </div>
+      <div class="t-card-footer">
+        <span class="t-slots"><strong>20</strong> slots left</span>
+        <a href="signup.html" class="t-join-btn">Join Now</a>
+      </div>
+    </div>
+
+    <div class="t-card reveal" style="transition-delay:0.2s">
+      <div class="t-card-img">
+        <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=600&q=80" alt="Weekend">
+        <div class="t-card-img-overlay"></div>
+        <div class="t-status status-soon">Coming Soon</div>
+      </div>
+      <div class="t-card-body">
+        <span class="t-game-tag">Free Fire · Special Event</span>
+        <div class="t-name">Weekend Clash</div>
+        <div class="t-row"><span class="t-row-label">Entry Fee</span><span class="t-row-val entry">₹20</span></div>
+        <div class="t-row"><span class="t-row-label">Prize Pool</span><span class="t-row-val prize">₹800+</span></div>
+        <div class="t-row"><span class="t-row-label">Time</span><span class="t-row-val">Sunday 7:00 PM</span></div>
+        <div class="slots-bar"><div class="slots-fill" style="width:0%"></div></div>
+      </div>
+      <div class="t-card-footer">
+        <span class="t-slots">Registrations opening soon</span>
+        <button class="t-join-btn disabled">Soon</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="trust">
+  <span class="section-eyebrow reveal">Why HyperClutch?</span>
+  <h2 class="section-title reveal">Built on <span>Trust</span></h2>
+  <div class="trust-grid">
+    <div class="trust-card reveal">
+      <span class="trust-icon">🎯</span>
+      <span class="trust-num">100%</span>
+      <span class="trust-label">Skill-Based Wins</span>
+    </div>
+    <div class="trust-card reveal" style="transition-delay:0.08s">
+      <span class="trust-icon">👥</span>
+      <span class="trust-num" data-target="15">15+</span>
+      <span class="trust-label">Players Registered</span>
+    </div>
+    <div class="trust-card reveal" style="transition-delay:0.16s">
+      <span class="trust-icon">⚡</span>
+      <span class="trust-num">Daily</span>
+      <span class="trust-label">Matches at 7 PM</span>
+    </div>
+    <div class="trust-card reveal" style="transition-delay:0.24s">
+      <span class="trust-icon">💸</span>
+      <span class="trust-num">Fast</span>
+      <span class="trust-label">UPI Prize Payouts</span>
+    </div>
+  </div>
+</section>
+
+<!-- WHATSAPP -->
+<section class="wa-section">
+  <div class="wa-inner">
+    <div class="wa-left reveal">
+      <h2>Never Miss a<br><span>Match Again</span></h2>
+      <p>Join our WhatsApp community to get daily 7 PM tournament alerts, room IDs before every match, winner announcements and prize confirmations — all in one place.</p>
+    </div>
+    <a href=https://chat.whatsapp.com/FwjnGPQH1uTD51O9fuwavH target="_blank" class="btn-wa reveal" style="transition-delay:0.15s">
+      <svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+      Join WhatsApp Group
+    </a>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="how-inner">
+    <span class="section-eyebrow reveal">Simple Process</span>
+    <h2 class="section-title reveal">Earn in <span>4 Steps</span></h2>
+    <div class="how-steps">
+      <div class="how-step reveal">
+        <span class="how-step-num">01</span>
+        <span class="how-step-icon">📝</span>
+        <div class="how-step-title">Register Free</div>
+        <p class="how-step-desc">Create your HyperClutch account in 60 seconds. No documents, no hassle.</p>
+      </div>
+      <div class="how-step reveal" style="transition-delay:0.1s">
+        <span class="how-step-num">02</span>
+        <span class="how-step-icon">💳</span>
+        <div class="how-step-title">Pay ₹20 UPI</div>
+        <p class="how-step-desc">Pay your ₹20 entry fee via UPI and send the screenshot for instant admin verification.</p>
+      </div>
+      <div class="how-step reveal" style="transition-delay:0.2s">
+        <span class="how-step-num">03</span>
+        <span class="how-step-icon">🎮</span>
+        <div class="how-step-title">Get Room ID</div>
+        <p class="how-step-desc">Receive the Room ID & Password at 6:55 PM sharp — 5 minutes before match start.</p>
+      </div>
+      <div class="how-step reveal" style="transition-delay:0.3s">
+        <span class="how-step-num">04</span>
+        <span class="how-step-icon">💸</span>
+        <div class="how-step-title">Win & Cashout</div>
+        <p class="how-step-desc">Top performers get cash prizes sent directly to their UPI within 30 minutes of match end.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">Hyper<em>Clutch</em></div>
+      <div class="footer-tagline">Your Game. Your Money. Real Cash.</div>
+    </div>
+    <div class="footer-links">
+      <a href="mailto:itshyperclutch@gmail.com">itshyperclutch@gmail.com</a>
+      <a href="https://instagram.com/_hyperclutch" target="_blank">@_hyperclutch on Instagram</a>
+      <a href="https://chat.whatsapp.com/PLACEHOLDER" target="_blank">Join WhatsApp Community</a>
+    </div>
+    <div>
+      <div class="footer-copy">© 2026 HyperClutch. All rights reserved.</div>
+      <div class="footer-copy" style="margin-top:4px;">Skill-based platform. Not gambling.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// cursor glow
+const cg = document.getElementById('cursor-glow');
+document.addEventListener('mousemove', e => {
+  cg.style.left = e.clientX + 'px';
+  cg.style.top = e.clientY + 'px';
+});
+
+// scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){ e.target.classList.add('in'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

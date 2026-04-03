@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Tournaments — HyperClutch</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --orange:#ff6b00;
+  --orange-bright:#ff8c00;
+  --orange-dim:rgba(255,107,0,0.10);
+  --orange-glow:rgba(255,107,0,0.28);
+  --yellow:#ffd000;
+  --green:#00e676;
+  --green-dim:rgba(0,230,118,0.08);
+  --red:#ff4d4d;
+  --blue:#3b82f6;
+  --bg:#060407;
+  --bg2:#0c0810;
+  --bg3:#110d18;
+  --bg4:#160f20;
+  --border:rgba(255,255,255,0.07);
+  --border-o:rgba(255,107,0,0.18);
+  --text:#f4f0ee;
+  --text2:rgba(244,240,238,0.55);
+  --text3:rgba(244,240,238,0.28);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:0.5;
+}
+
+.grid-bg{
+  position:fixed;inset:0;z-index:-2;
+  background-image:
+    linear-gradient(rgba(255,107,0,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,107,0,0.025) 1px,transparent 1px);
+  background-size:50px 50px;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;width:100%;height:62px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;gap:16px;
+  background:rgba(6,4,7,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  z-index:1000;
+}
+
+.nav-logo{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:20px;font-weight:900;letter-spacing:0.05em;
+  color:var(--text);text-decoration:none;text-transform:uppercase;
+  flex-shrink:0;
+}
+.nav-logo em{color:var(--orange);font-style:normal;}
+
+.nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+
+.nav-back{
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;color:var(--text2);text-decoration:none;transition:color 0.2s;
+}
+.nav-back:hover{color:var(--orange);}
+.nav-back svg{width:15px;height:15px;}
+
+/* wallet pill */
+.wallet-pill{
+  display:flex;align-items:center;gap:7px;
+  background:var(--orange-dim);border:1px solid var(--border-o);
+  padding:7px 14px;border-radius:8px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:15px;font-weight:800;color:var(--orange);
+  letter-spacing:0.04em;cursor:default;
+}
+
+/* avatar */
+.nav-avatar{
+  width:34px;height:34px;border-radius:8px;
+  background:linear-gradient(135deg,var(--orange),#ff3d00);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;font-weight:900;color:#000;
+  border:1px solid var(--border-o);
+  cursor:pointer;transition:all 0.2s;
+  text-decoration:none;
+}
+.nav-avatar:hover{box-shadow:0 0 14px var(--orange-glow);}
+
+/* ── PAGE ── */
+.page{
+  padding:82px 28px 48px;
+  max-width:1100px;margin:0 auto;
+  position:relative;z-index:1;
+}
+
+/* ── PAGE HEADER ── */
+.page-header{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:16px;margin-bottom:28px;
+}
+
+.page-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(28px,4vw,44px);font-weight:900;
+  text-transform:uppercase;letter-spacing:0.02em;line-height:1;
+}
+.page-title span{color:var(--orange);}
+
+.page-sub{font-size:13px;color:var(--text2);margin-top:4px;}
+
+/* filter tabs */
+.filter-tabs{
+  display:flex;gap:8px;flex-wrap:wrap;
+}
+.filter-tab{
+  padding:7px 16px;border-radius:7px;
+  font-size:13px;font-weight:500;letter-spacing:0.04em;
+  cursor:pointer;transition:all 0.2s;border:none;
+  background:rgba(255,255,255,0.04);
+  color:var(--text2);border:1px solid var(--border);
+}
+.filter-tab.active{
+  background:var(--orange-dim);color:var(--orange);
+  border-color:var(--border-o);
+}
+.filter-tab:hover{color:var(--text);border-color:rgba(255,255,255,0.12);}
+
+/* ── LOW BALANCE WARNING ── */
+.balance-warn{
+  background:rgba(255,208,0,0.06);
+  border:1px solid rgba(255,208,0,0.2);
+  border-radius:10px;padding:14px 18px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;
+  margin-bottom:20px;
+  font-size:13px;color:var(--yellow);
+  display:none;
+}
+.balance-warn a{color:var(--orange);text-decoration:none;font-weight:600;}
+.balance-warn a:hover{text-decoration:underline;}
+
+/* ── EMPTY STATE ── */
+.empty-state{
+  text-align:center;padding:80px 20px;
+  color:var(--text3);
+}
+.empty-state .empty-icon{font-size:48px;display:block;margin-bottom:16px;}
+.empty-state h3{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:22px;font-weight:800;text-transform:uppercase;
+  letter-spacing:0.04em;color:var(--text2);margin-bottom:8px;
+}
+.empty-state p{font-size:13px;line-height:1.8;}
+
+/* ── LOADING SKELETON ── */
+.skeleton{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:16px;padding:24px;margin-bottom:16px;
+  animation:shimmer 1.6s ease-in-out infinite;
+}
+@keyframes shimmer{0%,100%{opacity:0.5}50%{opacity:0.8}}
+.skel-line{
+  height:12px;border-radius:6px;background:var(--bg4);margin-bottom:10px;
+}
+
+/* ── TOURNAMENT CARD ── */
+.t-card{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:16px;
+  margin-bottom:16px;
+  overflow:hidden;
+  transition:all 0.25s;
+  position:relative;
+}
+.t-card:hover{border-color:var(--border-o);box-shadow:0 8px 40px rgba(255,107,0,0.07);}
+
+/* top accent when open */
+.t-card.status-open::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+}
+.t-card.status-joined::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--blue),transparent);
+}
+.t-card.status-full::before,
+.t-card.status-started::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--red),transparent);
+}
+.t-card.status-closing::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--orange),transparent);
+}
+
+/* card image */
+.t-card-img{
+  position:relative;height:160px;overflow:hidden;
+}
+.t-card-img img{
+  width:100%;height:100%;object-fit:cover;
+  filter:brightness(0.65) saturate(1.2);
+  transition:transform 0.4s;
+}
+.t-card:hover .t-card-img img{transform:scale(1.04);}
+.t-card-img-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 30%,var(--bg3) 100%);
+}
+
+/* status badge */
+.t-status-badge{
+  position:absolute;top:12px;left:12px;
+  padding:4px 12px;border-radius:100px;
+  font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+  display:flex;align-items:center;gap:5px;
+}
+.badge-open{background:rgba(0,230,118,0.15);color:var(--green);border:1px solid rgba(0,230,118,0.25);}
+.badge-open::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);display:block;animation:blink 1.5s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+.badge-joined{background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.25);}
+.badge-closing{background:rgba(255,107,0,0.15);color:var(--orange);border:1px solid rgba(255,107,0,0.25);}
+.badge-full{background:rgba(255,77,77,0.12);color:var(--red);border:1px solid rgba(255,77,77,0.2);}
+.badge-started{background:rgba(255,77,77,0.12);color:var(--red);border:1px solid rgba(255,77,77,0.2);}
+
+/* prize badge top right */
+.t-prize-badge{
+  position:absolute;top:12px;right:12px;
+  background:rgba(0,0,0,0.7);border:1px solid rgba(255,208,0,0.3);
+  backdrop-filter:blur(8px);
+  padding:6px 12px;border-radius:8px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:900;color:var(--yellow);
+  letter-spacing:0.04em;
+}
+.t-prize-badge small{font-size:10px;color:var(--text3);display:block;text-align:center;letter-spacing:0.08em;text-transform:uppercase;margin-top:1px;}
+
+/* card body */
+.t-card-body{padding:20px 22px;}
+
+.t-card-top{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:12px;margin-bottom:16px;flex-wrap:wrap;
+}
+
+.t-card-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:22px;font-weight:900;text-transform:uppercase;
+  letter-spacing:0.04em;line-height:1;
+}
+.t-card-type{
+  font-size:12px;color:var(--text3);margin-top:4px;letter-spacing:0.06em;
+}
+
+/* info grid */
+.t-info-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0;
+  border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;margin-bottom:16px;
+}
+.t-info-item{
+  padding:12px 14px;text-align:center;
+  border-right:1px solid var(--border);
+}
+.t-info-item:last-child{border-right:none;}
+.t-info-val{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:800;line-height:1;display:block;
+  margin-bottom:3px;
+}
+.t-info-val.orange{color:var(--orange);}
+.t-info-val.yellow{color:var(--yellow);}
+.t-info-val.green{color:var(--green);}
+.t-info-val.white{color:var(--text);}
+.t-info-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;}
+
+/* slots bar */
+.slots-section{margin-bottom:16px;}
+.slots-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:6px;font-size:12px;color:var(--text3);
+}
+.slots-header strong{color:var(--text);}
+.slots-bar{height:5px;background:var(--border);border-radius:100px;overflow:hidden;}
+.slots-fill{
+  height:100%;border-radius:100px;
+  background:linear-gradient(90deg,var(--green),var(--yellow));
+  transition:width 0.6s ease;
+}
+.slots-fill.almost{background:linear-gradient(90deg,var(--yellow),var(--orange));}
+.slots-fill.full{background:linear-gradient(90deg,var(--orange),var(--red));}
+
+/* countdown */
+.t-countdown{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 14px;
+  background:var(--bg4);border:1px solid var(--border);
+  border-radius:8px;margin-bottom:14px;
+  font-size:13px;
+}
+.countdown-icon{font-size:14px;flex-shrink:0;}
+.countdown-text{color:var(--text2);}
+.countdown-time{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;font-size:15px;margin-left:auto;
+  letter-spacing:0.06em;
+}
+.countdown-time.urgent{color:var(--red);animation:urgentPulse 1s ease-in-out infinite;}
+@keyframes urgentPulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.countdown-time.normal{color:var(--yellow);}
+.countdown-time.soon{color:var(--orange);}
+.countdown-time.started{color:var(--red);}
+
+/* card footer */
+.t-card-footer{
+  display:flex;gap:10px;flex-wrap:wrap;
+}
+
+/* action buttons */
+.btn-join{
+  flex:1;padding:13px;
+  background:var(--orange);color:#000;
+  border:none;border-radius:8px;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:800;letter-spacing:0.08em;
+  text-transform:uppercase;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  position:relative;overflow:hidden;
+}
+.btn-join::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);
+}
+.btn-join:hover:not(:disabled){
+  background:var(--orange-bright);
+  box-shadow:0 0 24px var(--orange-glow);transform:translateY(-1px);
+}
+.btn-join:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+
+.btn-joined{
+  flex:1;padding:13px;
+  background:rgba(59,130,246,0.12);color:#60a5fa;
+  border:1px solid rgba(59,130,246,0.25);border-radius:8px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:800;letter-spacing:0.08em;
+  text-transform:uppercase;cursor:default;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+
+.btn-room{
+  flex:1;padding:13px;
+  background:var(--green-dim);color:var(--green);
+  border:1px solid rgba(0,230,118,0.25);border-radius:8px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:800;letter-spacing:0.08em;
+  text-transform:uppercase;cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  text-decoration:none;animation:roomPulse 2s ease-in-out infinite;
+}
+.btn-room:hover{background:rgba(0,230,118,0.15);box-shadow:0 0 20px rgba(0,230,118,0.2);}
+@keyframes roomPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,230,118,0.15)}50%{box-shadow:0 0 12px 3px rgba(0,230,118,0.1)}}
+
+.btn-closed{
+  flex:1;padding:13px;
+  background:rgba(255,77,77,0.08);color:var(--red);
+  border:1px solid rgba(255,77,77,0.18);border-radius:8px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:800;letter-spacing:0.08em;
+  text-transform:uppercase;cursor:not-allowed;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+
+.btn-addmoney{
+  padding:13px 18px;
+  background:transparent;color:var(--text2);
+  border:1px solid var(--border);border-radius:8px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:14px;font-weight:700;letter-spacing:0.06em;
+  text-transform:uppercase;cursor:pointer;transition:all 0.2s;
+  text-decoration:none;display:flex;align-items:center;gap:6px;
+}
+.btn-addmoney:hover{border-color:var(--border-o);color:var(--orange);}
+
+/* spinner for join button */
+.btn-spinner{
+  width:16px;height:16px;border-radius:50%;
+  border:2px solid rgba(0,0,0,0.3);border-top-color:#000;
+  animation:spin 0.7s linear infinite;display:none;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── CONFIRM MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.88);
+  backdrop-filter:blur(8px);z-index:5000;
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex;}
+
+.modal{
+  background:var(--bg3);border:1px solid var(--border-o);
+  border-radius:16px;max-width:400px;width:100%;
+  position:relative;overflow:hidden;
+}
+.modal::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--orange),transparent);
+}
+
+.modal-body{padding:28px;}
+.modal-icon{font-size:36px;text-align:center;display:block;margin-bottom:16px;}
+.modal-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:22px;font-weight:900;text-transform:uppercase;
+  letter-spacing:0.04em;text-align:center;margin-bottom:6px;
+}
+.modal-sub{font-size:13px;color:var(--text2);text-align:center;line-height:1.7;margin-bottom:20px;}
+
+.modal-details{
+  background:var(--bg4);border:1px solid var(--border);
+  border-radius:10px;padding:14px;margin-bottom:20px;
+}
+.modal-detail-row{
+  display:flex;justify-content:space-between;
+  font-size:13px;padding:5px 0;
+  border-bottom:1px solid var(--border);
+}
+.modal-detail-row:last-child{border-bottom:none;}
+.modal-detail-label{color:var(--text3);}
+.modal-detail-val{font-weight:600;color:var(--text);}
+.modal-detail-val.orange{color:var(--orange);}
+.modal-detail-val.yellow{color:var(--yellow);}
+
+.modal-balance{
+  font-size:12px;color:var(--text3);text-align:center;
+  margin-bottom:16px;
+}
+.modal-balance strong{color:var(--orange);}
+
+.modal-actions{display:flex;gap:10px;}
+.modal-confirm{
+  flex:1;padding:13px;
+  background:var(--orange);color:#000;
+  border:none;border-radius:8px;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:800;letter-spacing:0.08em;
+  text-transform:uppercase;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.modal-confirm:hover:not(:disabled){
+  background:var(--orange-bright);box-shadow:0 0 20px var(--orange-glow);
+}
+.modal-confirm:disabled{opacity:0.5;cursor:not-allowed;}
+.modal-spinner{
+  width:16px;height:16px;border-radius:50%;
+  border:2px solid rgba(0,0,0,0.3);border-top-color:#000;
+  animation:spin 0.7s linear infinite;display:none;
+}
+.modal-cancel{
+  padding:13px 20px;background:transparent;color:var(--text2);
+  border:1px solid var(--border);border-radius:8px;cursor:pointer;
+  font-size:14px;transition:all 0.2s;
+}
+.modal-cancel:hover{border-color:rgba(255,255,255,0.15);color:var(--text);}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--bg3);border:1px solid var(--border);
+  padding:14px 24px;border-radius:10px;
+  font-size:13px;font-weight:500;
+  display:flex;align-items:center;gap:10px;
+  z-index:10000;
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s;
+  opacity:0;max-width:90vw;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast.t-success{border-color:rgba(0,230,118,0.3);color:var(--green);}
+.toast.t-error{border-color:rgba(255,77,77,0.3);color:var(--red);}
+.toast.t-info{border-color:var(--border-o);color:var(--orange);}
+.toast.t-warn{border-color:rgba(255,208,0,0.3);color:var(--yellow);}
+
+/* ── LOADING ── */
+#loading-screen{
+  position:fixed;inset:0;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:99999;transition:opacity 0.5s;
+}
+#loading-screen.hidden{opacity:0;pointer-events:none;}
+.loader-logo{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:32px;font-weight:900;text-transform:uppercase;
+  letter-spacing:0.05em;color:var(--text);margin-bottom:20px;
+}
+.loader-logo em{color:var(--orange);font-style:normal;}
+.loader-bar{width:160px;height:3px;background:var(--border);border-radius:100px;overflow:hidden;}
+.loader-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));border-radius:100px;width:0%;animation:load 1.4s ease forwards;}
+@keyframes load{to{width:100%;}}
+.loader-text{font-size:11px;color:var(--text3);letter-spacing:0.1em;margin-top:10px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  .t-info-grid{grid-template-columns:1fr 1fr;}
+  .t-info-item:nth-child(2){border-right:none;}
+  .t-info-item:nth-child(3){border-top:1px solid var(--border);}
+  .t-info-item:nth-child(4){border-top:1px solid var(--border);border-right:none;}
+}
+@media(max-width:480px){
+  nav{padding:0 16px;}
+  .page{padding:74px 14px 40px;}
+  .t-card-body{padding:16px;}
+  .t-card-footer{flex-direction:column;}
+  .btn-join,.btn-joined,.btn-room,.btn-closed,.btn-addmoney{width:100%;}
+  .modal-body{padding:20px;}
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<!-- LOADING -->
+<div id="loading-screen">
+  <div class="loader-logo">Hyper<em>Clutch</em></div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+  <div class="loader-text">Loading tournaments...</div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">Hyper<em>Clutch</em></a>
+  <div class="nav-right">
+    <div class="wallet-pill">💰 ₹<span id="nav-wallet">0</span></div>
+    <a href="dashboard.html" class="nav-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M5 12l7-7M5 12l7 7"/>
+      </svg>
+      Dashboard
+    </a>
+    <a href="profile.html" class="nav-avatar" id="nav-avatar">HC</a>
+  </div>
+</nav>
+
+<!-- PAGE -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <div class="page-title">🎮 Active <span>Tournaments</span></div>
+      <div class="page-sub">Daily matches at 7:00 PM · ₹20 entry · ₹800 prize pool</div>
+    </div>
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="setFilter('all',this)">All</button>
+      <button class="filter-tab" onclick="setFilter('open',this)">Open</button>
+      <button class="filter-tab" onclick="setFilter('joined',this)">Joined</button>
+    </div>
+  </div>
+
+  <!-- LOW BALANCE WARNING -->
+  <div class="balance-warn" id="balance-warn">
+    ⚠️ Your wallet balance is low. <a href="addmoney.html">Add money →</a> to join tournaments.
+  </div>
+
+  <!-- SKELETON LOADERS -->
+  <div id="skeletons">
+    <div class="skeleton"><div class="skel-line" style="width:60%;height:20px;margin-bottom:16px;"></div><div class="skel-line" style="width:90%;"></div><div class="skel-line" style="width:75%;"></div><div class="skel-line" style="width:40%;height:40px;margin-top:16px;"></div></div>
+    <div class="skeleton"><div class="skel-line" style="width:50%;height:20px;margin-bottom:16px;"></div><div class="skel-line" style="width:85%;"></div><div class="skel-line" style="width:65%;"></div><div class="skel-line" style="width:40%;height:40px;margin-top:16px;"></div></div>
+  </div>
+
+  <!-- TOURNAMENT LIST -->
+  <div id="tournaments-container"></div>
+
+  <!-- EMPTY STATE -->
+  <div class="empty-state" id="empty-state" style="display:none;">
+    <span class="empty-icon">🎮</span>
+    <h3>No Tournaments Found</h3>
+    <p>No matches available right now.<br>Check back closer to 7:00 PM for tonight's match.</p>
+  </div>
+
+</div>
+
+<!-- JOIN CONFIRM MODAL -->
+<div class="modal-overlay" id="confirm-modal" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal-inner">
+    <div class="modal-body">
+      <span class="modal-icon">🎮</span>
+      <div class="modal-title" id="modal-title">Join Tournament</div>
+      <div class="modal-sub">You're about to join this match. Entry fee will be deducted from your wallet.</div>
+
+      <div class="modal-details">
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Tournament</span>
+          <span class="modal-detail-val" id="modal-tname">—</span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Entry Fee</span>
+          <span class="modal-detail-val orange" id="modal-fee">₹0</span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Prize Pool</span>
+          <span class="modal-detail-val yellow" id="modal-prize">₹0</span>
+        </div>
+        <div class="modal-detail-row">
+          <span class="modal-detail-label">Match Time</span>
+          <span class="modal-detail-val" id="modal-time">—</span>
+        </div>
+      </div>
+
+      <div class="modal-balance">
+        Current wallet balance: <strong>₹<span id="modal-balance">0</span></strong>
+        &nbsp;→&nbsp; After joining: <strong style="color:var(--green);">₹<span id="modal-after">0</span></strong>
+      </div>
+
+      <div class="modal-actions">
+        <button class="modal-confirm" id="modal-confirm-btn" onclick="confirmJoin()">
+          <span id="modal-btn-text">Confirm & Join →</span>
+          <div class="modal-spinner" id="modal-spinner"></div>
+        </button>
+        <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+// Firebase
+const firebaseConfig = {
+  apiKey:"AIzaSyDIA2I6-htEdMxbxxsqKkeUlq86vJjOpRo",
+  authDomain:"hyperclutch.firebaseapp.com",
+  projectId:"hyperclutch",
+  appId:"1:781538384038:web:002bb30ad711c3deb3fc67",
+  databaseURL:"https://hyperclutch-default-rtdb.firebaseio.com/"
+};
+if(!firebase.apps.length){ firebase.initializeApp(firebaseConfig); }
+const auth  = firebase.auth();
+const db    = firebase.firestore();
+const rtdb  = firebase.database();
+
+// State
+let currentUser    = null;
+let walletBalance  = 0;
+let tournaments    = [];     // [{id, data, playerCount, joined}]
+let joinedSet      = new Set();
+let currentFilter  = 'all';
+let countdownTimer = null;
+let pendingJoin    = null;   // {id, fee, name, prize, time}
+
+// image pool for cards
+const cardImages = [
+  'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=70',
+  'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=70',
+  'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&q=70',
+  'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=800&q=70',
+];
+
+// ── AUTH GUARD ──
+auth.onAuthStateChanged(user => {
+  if(!user){ window.location.href = 'login.html'; return; }
+  currentUser = user;
+
+  // Set nav avatar initials
+  db.collection('users').doc(user.uid).get().then(doc => {
+    const name = doc.exists ? (doc.data().username || user.displayName || 'HC') : 'HC';
+    document.getElementById('nav-avatar').textContent = name.slice(0,2).toUpperCase();
+  });
+
+  loadWallet();
+  loadJoined();
+  loadTournaments();
+});
+
+// ── WALLET (Realtime DB) ──
+function loadWallet(){
+  rtdb.ref('users/' + currentUser.uid + '/wallet').on('value', snap => {
+    walletBalance = snap.val() || 0;
+    document.getElementById('nav-wallet').textContent = walletBalance;
+    document.getElementById('modal-balance').textContent = walletBalance;
+    // Show low balance warning if < ₹20
+    document.getElementById('balance-warn').style.display = walletBalance < 20 ? 'flex' : 'none';
+    renderAll();
+  });
+}
+
+// ── LOAD JOINED (once) ──
+function loadJoined(){
+  rtdb.ref('users/' + currentUser.uid + '/joinedTournaments').once('value').then(snap => {
+    snap.forEach(c => joinedSet.add(c.key));
+    renderAll();
+  });
+}
+
+// ── LOAD TOURNAMENTS ──
+function loadTournaments(){
+  db.collection('tournaments')
+    .orderBy('datetime', 'asc')
+    .onSnapshot(snapshot => {
+      tournaments = [];
+
+      snapshot.forEach(doc => {
+        const t = doc.data();
+        if(!t.datetime) return;
+        tournaments.push({
+          id: doc.id,
+          data: t,
+          playerCount: 0,
+          joined: joinedSet.has(doc.id),
+        });
+      });
+
+      // Hide skeletons
+      document.getElementById('skeletons').style.display = 'none';
+
+      renderAll();
+      listenPlayerCounts();
+      startCountdownLoop();
+
+      // Hide loader
+      setTimeout(() => {
+        const ls = document.getElementById('loading-screen');
+        ls.classList.add('hidden');
+        setTimeout(() => ls.remove(), 500);
+      }, 1200);
+
+    }, err => {
+      console.error(err);
+      showToast('❌ Failed to load tournaments. Check your connection.', 't-error');
+    });
+}
+
+// ── LISTEN PLAYER COUNTS ──
+function listenPlayerCounts(){
+  tournaments.forEach(t => {
+    db.collection('tournamentPlayers').doc(t.id)
+      .collection('players').onSnapshot(snap => {
+        t.playerCount = snap.size;
+        renderAll();
+      });
+  });
+}
+
+// ── RENDER ALL ──
+function renderAll(){
+  const container = document.getElementById('tournaments-container');
+  const now = Date.now();
+
+  let filtered = tournaments.filter(t => {
+    if(currentFilter === 'open')   return !joinedSet.has(t.id) && (t.data.datetime.toDate().getTime() > now);
+    if(currentFilter === 'joined') return joinedSet.has(t.id);
+    return true;
+  });
+
+  if(filtered.length === 0){
+    container.innerHTML = '';
+    document.getElementById('empty-state').style.display = 'block';
+    return;
+  }
+  document.getElementById('empty-state').style.display = 'none';
+
+  container.innerHTML = filtered.map((t,i) => renderCard(t, i, now)).join('');
+}
+
+// ── RENDER ONE CARD ──
+function renderCard(t, idx, now){
+  const {id, data, playerCount} = t;
+  const matchTime = data.datetime.toDate();
+  const diff      = matchTime.getTime() - now;
+  const isJoined  = joinedSet.has(id);
+  const isFull    = playerCount >= (data.maxPlayers || 50);
+  const isStarted = diff <= 0;
+  const isClosing = diff > 0 && diff <= 5 * 60 * 1000; // 5 min warning
+  const slotPct   = Math.min((playerCount / (data.maxPlayers || 50)) * 100, 100);
+  const slotsLeft = Math.max((data.maxPlayers || 50) - playerCount, 0);
+  const img       = cardImages[idx % cardImages.length];
+
+  const formattedDate = matchTime.toLocaleDateString('en-IN', {day:'2-digit',month:'short'});
+  const formattedTime = matchTime.toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit',hour12:true}).toUpperCase();
+
+  // Status class
+  let statusClass = 'status-open';
+  if(isStarted) statusClass = 'status-started';
+  else if(isJoined) statusClass = 'status-joined';
+  else if(isFull) statusClass = 'status-full';
+  else if(isClosing) statusClass = 'status-closing';
+
+  // Status badge HTML
+  let statusBadge = '';
+  if(isStarted)      statusBadge = `<div class="t-status-badge badge-started">🔴 Match Started</div>`;
+  else if(isJoined)  statusBadge = `<div class="t-status-badge badge-joined">✓ Joined</div>`;
+  else if(isFull)    statusBadge = `<div class="t-status-badge badge-full">Full</div>`;
+  else if(isClosing) statusBadge = `<div class="t-status-badge badge-closing">⚡ Closing Soon</div>`;
+  else               statusBadge = `<div class="t-status-badge badge-open">Open</div>`;
+
+  // Slots bar color
+  let slotFillClass = '';
+  if(slotPct >= 90) slotFillClass = 'full';
+  else if(slotPct >= 70) slotFillClass = 'almost';
+
+  // Countdown text
+  let cdText = '', cdClass = 'normal';
+  if(isStarted){
+    cdText = 'Match has started'; cdClass = 'started';
+  } else {
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    if(diff < 60000){ cdText = `${s}s`; cdClass='urgent'; }
+    else if(diff < 3600000){ cdText = `${m}m ${s}s`; cdClass = diff<300000?'soon':'normal'; }
+    else { cdText = `${h}h ${m}m`; cdClass='normal'; }
+  }
+
+  // Action button
+  let actionBtn = '';
+  if(isStarted){
+    if(isJoined && data.roomLink){
+      actionBtn = `<a href="${data.roomLink}" target="_blank" class="btn-room">🎮 Join Room Now</a>`;
+    } else if(isJoined){
+      actionBtn = `<div class="btn-joined">✓ Joined — Await Room ID</div>`;
+    } else {
+      actionBtn = `<div class="btn-closed">Match Started</div>`;
+    }
+  } else if(isJoined){
+    if(isClosing && data.roomLink){
+      actionBtn = `<div class="btn-joined">✓ Joined</div><a href="${data.roomLink}" target="_blank" class="btn-room">🎮 Enter Room</a>`;
+    } else {
+      actionBtn = `<div class="btn-joined">✓ Joined — Room ID at 6:55 PM</div>`;
+    }
+  } else if(isFull || isStarted){
+    actionBtn = `<div class="btn-closed">🔒 ${isFull?'Match Full':'Closed'}</div>`;
+  } else if(isClosing){
+    actionBtn = `<div class="btn-closed">🔒 Registration Closed</div>`;
+  } else if(walletBalance < (data.entry_fee || 20)){
+    actionBtn = `
+      <button class="btn-join" disabled>💳 Join — ₹${data.entry_fee||20}</button>
+      <a href="addmoney.html" class="btn-addmoney">+ Add Money</a>`;
+  } else {
+    actionBtn = `
+      <button class="btn-join" id="joinbtn-${id}"
+        onclick="openJoinModal('${id}','${(data.name||'Tournament').replace(/'/g,'\\\')}',${data.entry_fee||20},${data.winning_prize||800},'${formattedDate} ${formattedTime}')">
+        🎮 Join — ₹${data.entry_fee||20}
+        <div class="btn-spinner" id="spinner-${id}"></div>
+      </button>`;
+  }
+
+  return `
+    <div class="t-card ${statusClass}" id="card-${id}">
+      <div class="t-card-img">
+        <img src="${img}" alt="${data.name||'Tournament'}" loading="lazy">
+        <div class="t-card-img-overlay"></div>
+        ${statusBadge}
+        <div class="t-prize-badge">₹${data.winning_prize||800}<small>Prize Pool</small></div>
+      </div>
+      <div class="t-card-body">
+        <div class="t-card-top">
+          <div>
+            <div class="t-card-name">${data.name||'Daily Tournament'}</div>
+            <div class="t-card-type">Free Fire · ${data.mode||'Solo'} · ${formattedDate} ${formattedTime}</div>
+          </div>
+        </div>
+
+        <div class="t-info-grid">
+          <div class="t-info-item">
+            <span class="t-info-val orange">₹${data.entry_fee||20}</span>
+            <span class="t-info-label">Entry Fee</span>
+          </div>
+          <div class="t-info-item">
+            <span class="t-info-val yellow">₹${data.winning_prize||800}</span>
+            <span class="t-info-label">Prize Pool</span>
+          </div>
+          <div class="t-info-item">
+            <span class="t-info-val green">₹${data.per_kill||10}</span>
+            <span class="t-info-label">Per Kill</span>
+          </div>
+          <div class="t-info-item">
+            <span class="t-info-val white">${playerCount}/${data.maxPlayers||50}</span>
+            <span class="t-info-label">Players</span>
+          </div>
+        </div>
+
+        <div class="slots-section">
+          <div class="slots-header">
+            <span><strong>${slotsLeft}</strong> slots remaining</span>
+            <span>${Math.round(slotPct)}% filled</span>
+          </div>
+          <div class="slots-bar">
+            <div class="slots-fill ${slotFillClass}" style="width:${slotPct}%"></div>
+          </div>
+        </div>
+
+        <div class="t-countdown">
+          <span class="countdown-icon">⏱</span>
+          <span class="countdown-text">${isStarted ? 'Status' : 'Starts in'}</span>
+          <span class="countdown-time ${cdClass}" id="cd-${id}">${cdText}</span>
+        </div>
+
+        <div class="t-card-footer">
+          ${actionBtn}
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── COUNTDOWN LOOP ──
+function startCountdownLoop(){
+  if(countdownTimer) clearInterval(countdownTimer);
+  countdownTimer = setInterval(() => {
+    const now = Date.now();
+    tournaments.forEach(t => {
+      const el = document.getElementById('cd-' + t.id);
+      if(!el) return;
+      const diff = t.data.datetime.toDate().getTime() - now;
+      if(diff <= 0){
+        el.textContent = 'Match started';
+        el.className = 'countdown-time started';
+        return;
+      }
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      if(diff < 60000){
+        el.textContent = s + 's';
+        el.className = 'countdown-time urgent';
+      } else if(diff < 300000){
+        el.textContent = `${m}m ${s}s`;
+        el.className = 'countdown-time soon';
+      } else if(diff < 3600000){
+        el.textContent = `${m}m ${s}s`;
+        el.className = 'countdown-time normal';
+      } else {
+        el.textContent = `${h}h ${m}m`;
+        el.className = 'countdown-time normal';
+      }
+      // Re-render full card when crossing 5-min threshold
+      if(diff <= 300000 && diff > 299000) renderAll();
+    });
+  }, 1000);
+}
+
+// ── FILTER ──
+function setFilter(f, btn){
+  currentFilter = f;
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderAll();
+}
+
+// ── JOIN MODAL ──
+function openJoinModal(id, name, fee, prize, time){
+  pendingJoin = {id, name, fee, prize, time};
+  document.getElementById('modal-tname').textContent  = name;
+  document.getElementById('modal-fee').textContent    = '₹' + fee;
+  document.getElementById('modal-prize').textContent  = '₹' + prize;
+  document.getElementById('modal-time').textContent   = time;
+  document.getElementById('modal-balance').textContent = walletBalance;
+  document.getElementById('modal-after').textContent  = walletBalance - fee;
+  document.getElementById('confirm-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(){
+  document.getElementById('confirm-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  pendingJoin = null;
+}
+function closeModalOutside(e){
+  if(e.target === document.getElementById('confirm-modal')) closeModal();
+}
+
+// ── CONFIRM JOIN ──
+async function confirmJoin(){
+  if(!pendingJoin) return;
+  const {id, fee} = pendingJoin;
+
+  // Re-check balance
+  if(walletBalance < fee){
+    closeModal();
+    showToast('❌ Not enough wallet balance. Add money first.','t-error');
+    return;
+  }
+
+  // Check not already joined
+  if(joinedSet.has(id)){
+    closeModal();
+    showToast('⚠️ You have already joined this tournament.','t-warn');
+    return;
+  }
+
+  // Loading
+  const btn  = document.getElementById('modal-confirm-btn');
+  const text = document.getElementById('modal-btn-text');
+  const spin = document.getElementById('modal-spinner');
+  btn.disabled=true; text.textContent='Joining...'; spin.style.display='block';
+
+  try {
+    const tData = tournaments.find(t => t.id === id);
+    if(!tData) throw new Error('Tournament not found');
+
+    // Check capacity again
+    const snap = await db.collection('tournamentPlayers').doc(id).collection('players').get();
+    if(snap.size >= (tData.data.maxPlayers || 50)){
+      closeModal();
+      showToast('❌ Match is now full. You were too late!','t-error');
+      return;
+    }
+
+    // Deduct wallet via transaction
+    const result = await rtdb.ref('users/' + currentUser.uid + '/wallet')
+      .transaction(bal => {
+        if(bal === null || bal < fee) return; // abort
+        return bal - fee;
+      });
+
+    if(!result.committed){
+      closeModal();
+      showToast('❌ Wallet deduction failed. Check your balance.','t-error');
+      return;
+    }
+
+    // Get user data for player record
+    const userSnap = await rtdb.ref('users/' + currentUser.uid).once('value');
+    const userData = userSnap.val() || {};
+
+    // Save to Firestore
+    await db.collection('tournamentPlayers').doc(id).collection('players').doc(currentUser.uid).set({
+      uid:       currentUser.uid,
+      name:      userData.name || userData.username || '',
+      ffuid:     userData.freefire_uid || '',
+      ffname:    userData.freefire_name || '',
+      kills:     0,
+      prize:     0,
+      joinedAt:  firebase.firestore.FieldValue.serverTimestamp(),
+    });
+
+    // Mark as joined in RTDB
+    await rtdb.ref('users/' + currentUser.uid + '/joinedTournaments/' + id).set(true);
+
+    // Update local state
+    joinedSet.add(id);
+    closeModal();
+    showToast('✅ You\'re in! Room ID will be sent at 6:55 PM. Stay ready!','t-success');
+    renderAll();
+
+  } catch(err){
+    console.error(err);
+    closeModal();
+    let msg = '❌ Something went wrong. Please try again.';
+    if(err.code === 'permission-denied') msg = '❌ Permission denied. Please log in again.';
+    if(err.code === 'network-request-failed') msg = '❌ No internet connection.';
+    showToast(msg,'t-error');
+  }
+}
+
+// ── TOAST ──
+function showToast(msg, type='t-success'){
+  const t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 5000);
+}
+
+// Escape closes modal
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') closeModal();
+});
+</script>
+</body>
+</html>

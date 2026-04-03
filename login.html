@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Login — HyperClutch</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --orange:#ff6b00;
+  --orange-bright:#ff8c00;
+  --orange-dim:rgba(255,107,0,0.10);
+  --orange-glow:rgba(255,107,0,0.28);
+  --green:#00e676;
+  --red:#ff4d4d;
+  --bg:#060407;
+  --bg2:#0c0810;
+  --bg3:#110d18;
+  --border:rgba(255,255,255,0.07);
+  --border-o:rgba(255,107,0,0.20);
+  --text:#f4f0ee;
+  --text2:rgba(244,240,238,0.55);
+  --text3:rgba(244,240,238,0.28);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  overflow-x:hidden;
+}
+
+/* noise overlay */
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:0.5;
+}
+
+/* grid bg */
+.grid-bg{
+  position:fixed;inset:0;z-index:-2;
+  background-image:
+    linear-gradient(rgba(255,107,0,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,107,0,0.03) 1px,transparent 1px);
+  background-size:50px 50px;
+}
+
+/* ambient glow */
+.top-glow{
+  position:fixed;top:-250px;left:50%;transform:translateX(-50%);
+  width:700px;height:600px;
+  background:radial-gradient(ellipse,rgba(255,107,0,0.07) 0%,transparent 70%);
+  pointer-events:none;z-index:-1;
+}
+
+/* cursor glow */
+#cursor-glow{
+  position:fixed;width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,107,0,0.05),transparent 70%);
+  pointer-events:none;z-index:0;
+  transform:translate(-50%,-50%);
+  transition:left 0.2s ease,top 0.2s ease;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;width:100%;height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;
+  background:rgba(6,4,7,0.85);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  z-index:1000;
+}
+
+.nav-logo{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:22px;font-weight:900;letter-spacing:0.05em;
+  color:var(--text);text-decoration:none;text-transform:uppercase;
+}
+.nav-logo em{color:var(--orange);font-style:normal;}
+
+.nav-back{
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;font-weight:500;color:var(--text2);
+  text-decoration:none;transition:color 0.2s;letter-spacing:0.02em;
+}
+.nav-back:hover{color:var(--orange);}
+.nav-back svg{width:16px;height:16px;}
+
+/* ── PAGE ── */
+.page{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:80px 20px 40px;
+  position:relative;z-index:1;
+}
+
+/* ── SPLIT LAYOUT ── */
+.login-wrap{
+  display:grid;
+  grid-template-columns:1fr 420px;
+  gap:60px;
+  align-items:center;
+  max-width:900px;
+  width:100%;
+}
+
+/* ── LEFT PANEL ── */
+.login-left{}
+
+.left-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,230,118,0.08);
+  border:1px solid rgba(0,230,118,0.18);
+  padding:5px 14px;border-radius:100px;
+  font-size:11px;font-weight:500;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--green);margin-bottom:20px;
+}
+.left-eyebrow::before{
+  content:'';display:block;width:6px;height:6px;border-radius:50%;
+  background:var(--green);animation:pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(0.8)}}
+
+.left-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(44px,5.5vw,70px);
+  font-weight:900;text-transform:uppercase;
+  letter-spacing:-0.01em;line-height:0.95;margin-bottom:20px;
+}
+.left-title span{color:var(--orange);}
+
+.left-desc{
+  font-size:14px;color:var(--text2);
+  line-height:1.9;margin-bottom:32px;max-width:360px;
+}
+.left-desc strong{color:var(--orange);font-weight:500;}
+
+/* tonight's match mini card */
+.match-card{
+  background:var(--bg3);
+  border:1px solid var(--border-o);
+  border-radius:12px;padding:18px 20px;
+}
+
+.match-card-tag{
+  font-size:10px;font-weight:700;letter-spacing:0.15em;
+  text-transform:uppercase;color:var(--green);
+  display:flex;align-items:center;gap:6px;margin-bottom:10px;
+}
+.match-card-tag::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:var(--green);display:block;
+  animation:pulse 1.8s ease-in-out infinite;
+}
+
+.match-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:8px;
+}
+.match-row:last-child{margin-bottom:0;}
+
+.match-label{font-size:12px;color:var(--text3);letter-spacing:0.04em;}
+.match-val{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:800;letter-spacing:0.04em;
+}
+.match-val.orange{color:var(--orange);}
+.match-val.yellow{color:#ffd000;}
+
+.match-divider{height:1px;background:var(--border);margin:10px 0;}
+
+/* ── RIGHT PANEL — FORM CARD ── */
+.form-card{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:36px;
+  position:relative;overflow:hidden;
+}
+
+/* top accent line */
+.form-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--orange),transparent);
+}
+
+.form-header{margin-bottom:28px;}
+
+.form-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:26px;font-weight:900;text-transform:uppercase;
+  letter-spacing:0.02em;margin-bottom:6px;
+}
+.form-sub{font-size:13px;color:var(--text2);}
+
+/* ── FIELDS ── */
+.field{margin-bottom:18px;}
+
+.field-label{
+  display:block;
+  font-size:11px;font-weight:600;letter-spacing:0.10em;
+  text-transform:uppercase;color:var(--text3);margin-bottom:8px;
+}
+
+.field-wrap{position:relative;}
+
+.field-icon{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  font-size:15px;pointer-events:none;opacity:0.5;
+}
+
+.field input{
+  width:100%;
+  padding:13px 14px 13px 42px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);
+  border-radius:8px;
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;font-weight:400;
+  outline:none;
+  transition:all 0.2s;
+  -webkit-appearance:none;
+}
+.field input::placeholder{color:var(--text3);}
+.field input:focus{
+  border-color:var(--orange);
+  background:var(--orange-dim);
+  box-shadow:0 0 0 3px rgba(255,107,0,0.08);
+}
+.field input.error{
+  border-color:var(--red);
+  background:rgba(255,77,77,0.05);
+}
+
+/* password toggle */
+.pass-toggle{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;
+  color:var(--text3);font-size:16px;padding:2px;
+  transition:color 0.2s;
+}
+.pass-toggle:hover{color:var(--text2);}
+
+/* field error */
+.field-error{
+  font-size:11px;color:var(--red);margin-top:6px;
+  display:none;letter-spacing:0.02em;
+}
+
+/* ── FORGOT PASSWORD ── */
+.forgot-row{
+  display:flex;justify-content:flex-end;margin-top:-10px;margin-bottom:18px;
+}
+.forgot-link{
+  font-size:12px;color:var(--text3);text-decoration:none;
+  transition:color 0.2s;letter-spacing:0.02em;
+}
+.forgot-link:hover{color:var(--orange);}
+
+/* ── REMEMBER ME ── */
+.remember-row{
+  display:flex;align-items:center;gap:10px;margin-bottom:20px;
+}
+.remember-row input[type="checkbox"]{
+  width:16px;height:16px;accent-color:var(--orange);cursor:pointer;
+}
+.remember-row label{
+  font-size:13px;color:var(--text2);cursor:pointer;
+}
+
+/* ── LOGIN BUTTON ── */
+.login-btn{
+  width:100%;padding:15px;
+  background:var(--orange);color:#000;
+  border:none;border-radius:8px;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:800;letter-spacing:0.08em;
+  text-transform:uppercase;
+  transition:all 0.25s;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.login-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);
+}
+.login-btn:hover:not(:disabled){
+  background:var(--orange-bright);
+  transform:translateY(-1px);
+  box-shadow:0 8px 28px var(--orange-glow);
+}
+.login-btn:active:not(:disabled){transform:scale(0.98);}
+.login-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none;}
+
+/* spinner */
+.spinner{
+  width:18px;height:18px;border-radius:50%;
+  border:2px solid rgba(0,0,0,0.3);
+  border-top-color:#000;
+  animation:spin 0.7s linear infinite;display:none;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── DIVIDER ── */
+.divider{
+  display:flex;align-items:center;gap:12px;margin:20px 0;
+}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.divider span{font-size:11px;color:var(--text3);letter-spacing:0.10em;white-space:nowrap;}
+
+/* ── GOOGLE BUTTON ── */
+.google-btn{
+  width:100%;padding:13px;
+  background:transparent;
+  border:1px solid var(--border);
+  border-radius:8px;cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;font-weight:500;color:var(--text2);
+  transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  text-decoration:none;
+}
+.google-btn:hover{
+  border-color:rgba(255,255,255,0.15);
+  background:rgba(255,255,255,0.03);
+  color:var(--text);
+}
+.google-icon{width:18px;height:18px;flex-shrink:0;}
+
+/* ── SIGNUP LINK ── */
+.signup-row{
+  text-align:center;font-size:13px;color:var(--text2);margin-top:18px;
+}
+.signup-row a{
+  color:var(--orange);text-decoration:none;font-weight:500;
+}
+.signup-row a:hover{text-decoration:underline;}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--bg3);border:1px solid var(--border);
+  padding:14px 24px;border-radius:10px;
+  font-size:13px;font-weight:500;
+  display:flex;align-items:center;gap:10px;
+  z-index:10000;
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s;
+  opacity:0;white-space:nowrap;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  max-width:90vw;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast.t-success{border-color:rgba(0,230,118,0.3);color:var(--green);}
+.toast.t-error{border-color:rgba(255,77,77,0.3);color:var(--red);}
+.toast.t-info{border-color:var(--border-o);color:var(--orange);}
+
+/* ── FORGOT PASSWORD MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(6px);
+  z-index:5000;display:none;
+  align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex;}
+
+.modal{
+  background:var(--bg3);
+  border:1px solid var(--border-o);
+  border-radius:16px;
+  max-width:400px;width:100%;
+  padding:32px;position:relative;
+}
+.modal::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  border-radius:16px 16px 0 0;
+  background:linear-gradient(90deg,transparent,var(--orange),transparent);
+}
+
+.modal-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:22px;font-weight:900;text-transform:uppercase;
+  letter-spacing:0.04em;margin-bottom:8px;
+}
+.modal-desc{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:24px;}
+
+.modal .field{margin-bottom:20px;}
+
+.modal-actions{display:flex;gap:10px;}
+
+.modal-send{
+  flex:1;padding:13px;
+  background:var(--orange);color:#000;
+  border:none;border-radius:8px;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:800;letter-spacing:0.06em;
+  text-transform:uppercase;transition:all 0.2s;
+}
+.modal-send:hover{background:var(--orange-bright);box-shadow:0 0 20px var(--orange-glow);}
+
+.modal-cancel{
+  padding:13px 20px;
+  background:transparent;color:var(--text2);
+  border:1px solid var(--border);border-radius:8px;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-size:14px;
+  transition:all 0.2s;
+}
+.modal-cancel:hover{border-color:rgba(255,255,255,0.15);color:var(--text);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:800px){
+  .login-wrap{grid-template-columns:1fr;gap:36px;}
+  .login-left{display:none;}
+}
+@media(max-width:480px){
+  nav{padding:0 16px;}
+  .page{padding:76px 16px 30px;}
+  .form-card{padding:24px 18px;}
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="top-glow"></div>
+<div id="cursor-glow"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">Hyper<em>Clutch</em></a>
+  <a href="index.html" class="nav-back">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M19 12H5M5 12l7-7M5 12l7 7"/>
+    </svg>
+    Back to Home
+  </a>
+</nav>
+
+<!-- PAGE -->
+<div class="page">
+  <div class="login-wrap">
+
+    <!-- LEFT -->
+    <div class="login-left">
+      <div class="left-eyebrow">Daily 7 PM Matches</div>
+
+      <h2 class="left-title">
+        Welcome<br>
+        <span>Back,</span><br>
+        Player.
+      </h2>
+
+      <p class="left-desc">
+        Log in to join tonight's match, check your
+        <strong>prize balance</strong>, and see the leaderboard.
+        Your next ₹800 is waiting.
+      </p>
+
+      <!-- tonight's match card -->
+      <div class="match-card">
+        <div class="match-card-tag">Tonight's Match</div>
+        <div class="match-row">
+          <span class="match-label">Tournament</span>
+          <span class="match-val">Daily Solo Battle</span>
+        </div>
+        <div class="match-divider"></div>
+        <div class="match-row">
+          <span class="match-label">Start Time</span>
+          <span class="match-val orange">7:00 PM</span>
+        </div>
+        <div class="match-row">
+          <span class="match-label">Entry Fee</span>
+          <span class="match-val orange">₹20</span>
+        </div>
+        <div class="match-row">
+          <span class="match-label">Prize Pool</span>
+          <span class="match-val yellow">₹800</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT — FORM -->
+    <div class="form-card">
+
+      <div class="form-header">
+        <div class="form-title">Sign In</div>
+        <div class="form-sub">Enter your credentials to access your account.</div>
+      </div>
+
+      <!-- EMAIL -->
+      <div class="field" id="field-email">
+        <label class="field-label" for="email">Email Address</label>
+        <div class="field-wrap">
+          <span class="field-icon">✉️</span>
+          <input
+            type="email"
+            id="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            oninput="clearError('email')"
+            onkeydown="if(event.key==='Enter') handleLogin()"
+          >
+        </div>
+        <div class="field-error" id="err-email">Please enter a valid email address.</div>
+      </div>
+
+      <!-- PASSWORD -->
+      <div class="field" id="field-password">
+        <label class="field-label" for="password">Password</label>
+        <div class="field-wrap">
+          <span class="field-icon">🔒</span>
+          <input
+            type="password"
+            id="password"
+            placeholder="Your password"
+            autocomplete="current-password"
+            oninput="clearError('password')"
+            onkeydown="if(event.key==='Enter') handleLogin()"
+          >
+          <button class="pass-toggle" type="button" onclick="togglePass()" title="Toggle password">👁</button>
+        </div>
+        <div class="field-error" id="err-password">Password must be at least 8 characters.</div>
+      </div>
+
+      <!-- FORGOT -->
+      <div class="forgot-row">
+        <a href="#" class="forgot-link" onclick="openForgot(event)">Forgot password?</a>
+      </div>
+
+      <!-- REMEMBER ME -->
+      <div class="remember-row">
+        <input type="checkbox" id="remember" checked>
+        <label for="remember">Keep me signed in</label>
+      </div>
+
+      <!-- LOGIN BTN -->
+      <button class="login-btn" id="login-btn" onclick="handleLogin()">
+        <span id="btn-text">Sign In →</span>
+        <div class="spinner" id="spinner"></div>
+      </button>
+
+      <!-- DIVIDER -->
+      <div class="divider"><span>or continue with</span></div>
+
+      <!-- GOOGLE -->
+      <button class="google-btn" onclick="googleLogin()">
+        <svg class="google-icon" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <!-- SIGNUP LINK -->
+      <div class="signup-row">
+        Don't have an account?
+        <a href="signup.html">Create one free →</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FORGOT PASSWORD MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="forgot-modal">
+    <div class="modal-title">Reset Password</div>
+    <div class="modal-desc">
+      Enter your registered email address. We'll send you a link to reset your password.
+    </div>
+    <div class="field" id="field-reset">
+      <label class="field-label" for="reset-email">Email Address</label>
+      <div class="field-wrap">
+        <span class="field-icon">✉️</span>
+        <input
+          type="email"
+          id="reset-email"
+          placeholder="you@example.com"
+          onkeydown="if(event.key==='Enter') sendReset()"
+        >
+      </div>
+      <div class="field-error" id="err-reset">Please enter a valid email address.</div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-send" onclick="sendReset()">
+        <span id="reset-btn-text">Send Reset Link</span>
+      </button>
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+<script>
+// Firebase init
+const firebaseConfig = {
+  apiKey:"AIzaSyDIA2I6-htEdMxbxxsqKkeUlq86vJjOpRo",
+  authDomain:"hyperclutch.firebaseapp.com",
+  projectId:"hyperclutch",
+  appId:"1:781538384038:web:002bb30ad711c3deb3fc67"
+};
+if(!firebase.apps.length){ firebase.initializeApp(firebaseConfig); }
+const auth = firebase.auth();
+
+// cursor glow
+const cg = document.getElementById('cursor-glow');
+document.addEventListener('mousemove', e => {
+  cg.style.left = e.clientX + 'px';
+  cg.style.top  = e.clientY + 'px';
+});
+
+// ── CHECK ALREADY LOGGED IN ──
+auth.onAuthStateChanged(user => {
+  if(user) window.location.href = 'dashboard.html';
+});
+
+// ── TOAST ──
+function showToast(msg, type='t-success'){
+  const t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+// ── CLEAR ERROR ──
+function clearError(id){
+  document.getElementById(id).classList.remove('error');
+  document.getElementById('err-'+id).style.display='none';
+}
+
+function showError(id, msg){
+  const input = document.getElementById(id);
+  const err   = document.getElementById('err-'+id);
+  input.classList.add('error');
+  if(msg) err.textContent = msg;
+  err.style.display = 'block';
+  input.focus();
+}
+
+// ── PASSWORD TOGGLE ──
+function togglePass(){
+  const input = document.getElementById('password');
+  const btn   = document.querySelector('.pass-toggle');
+  if(input.type === 'password'){ input.type='text'; btn.textContent='🙈'; }
+  else { input.type='password'; btn.textContent='👁'; }
+}
+
+// ── REMEMBER ME (persistence) ──
+function getPersistence(){
+  return document.getElementById('remember').checked
+    ? firebase.auth.Auth.Persistence.LOCAL
+    : firebase.auth.Auth.Persistence.SESSION;
+}
+
+// ── LOGIN ──
+async function handleLogin(){
+  const email    = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+
+  // Basic validation
+  let hasError = false;
+  if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    showError('email','Please enter a valid email address.');
+    hasError = true;
+  }
+  if(!password || password.length < 6){
+    showError('password','Please enter your password.');
+    hasError = true;
+  }
+  if(hasError) return;
+
+  // Loading state
+  const btn  = document.getElementById('login-btn');
+  const text = document.getElementById('btn-text');
+  const spin = document.getElementById('spinner');
+  btn.disabled = true;
+  text.textContent = 'Signing In...';
+  spin.style.display = 'block';
+
+  try {
+    await auth.setPersistence(getPersistence());
+    await auth.signInWithEmailAndPassword(email, password);
+    showToast('✅ Welcome back! Redirecting...', 't-success');
+    setTimeout(() => window.location.href = 'dashboard.html', 1200);
+
+  } catch(err){
+    btn.disabled = false;
+    text.textContent = 'Sign In →';
+    spin.style.display = 'none';
+
+    let msg = '❌ Something went wrong. Please try again.';
+    switch(err.code){
+      case 'auth/user-not-found':
+        msg = '❌ No account found with this email.';
+        showError('email','No account found with this email. Sign up first.');
+        break;
+      case 'auth/wrong-password':
+        msg = '❌ Incorrect password. Try again or reset it.';
+        showError('password','Incorrect password.');
+        break;
+      case 'auth/invalid-email':
+        msg = '❌ Invalid email format.';
+        showError('email','Invalid email format.');
+        break;
+      case 'auth/too-many-requests':
+        msg = '⚠️ Too many failed attempts. Account temporarily locked. Reset your password.';
+        break;
+      case 'auth/user-disabled':
+        msg = '❌ This account has been disabled. Contact support.';
+        break;
+      case 'auth/network-request-failed':
+        msg = '❌ No internet connection. Please check your network.';
+        break;
+    }
+    showToast(msg, 't-error');
+  }
+}
+
+// ── GOOGLE LOGIN ──
+async function googleLogin(){
+  const provider = new firebase.auth.GoogleAuthProvider();
+  try {
+    await auth.setPersistence(getPersistence());
+    await auth.signInWithPopup(provider);
+    showToast('✅ Google login successful! Redirecting...', 't-success');
+    setTimeout(() => window.location.href = 'dashboard.html', 1200);
+  } catch(err){
+    let msg = '❌ Google login failed. Try again.';
+    if(err.code === 'auth/popup-closed-by-user') msg = '⚠️ Login popup closed. Try again.';
+    if(err.code === 'auth/network-request-failed') msg = '❌ No internet connection.';
+    showToast(msg, 't-error');
+  }
+}
+
+// ── FORGOT PASSWORD MODAL ──
+function openForgot(e){
+  if(e) e.preventDefault();
+  // Pre-fill email if entered
+  const email = document.getElementById('email').value.trim();
+  if(email) document.getElementById('reset-email').value = email;
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('reset-email').focus(), 100);
+}
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeModalOutside(e){
+  if(e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+async function sendReset(){
+  const email = document.getElementById('reset-email').value.trim();
+  if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    document.getElementById('reset-email').classList.add('error');
+    document.getElementById('err-reset').style.display = 'block';
+    return;
+  }
+
+  const btn = document.getElementById('reset-btn-text');
+  btn.textContent = 'Sending...';
+
+  try {
+    await auth.sendPasswordResetEmail(email);
+    closeModal();
+    showToast('✅ Reset link sent! Check your email inbox.', 't-success');
+  } catch(err){
+    let msg = '❌ Could not send reset email.';
+    if(err.code === 'auth/user-not-found') msg = '❌ No account found with this email.';
+    if(err.code === 'auth/network-request-failed') msg = '❌ No internet. Check your connection.';
+    showToast(msg, 't-error');
+  } finally {
+    btn.textContent = 'Send Reset Link';
+  }
+}
+
+// Escape key closes modal
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') closeModal();
+});
+</script>
+</body>
+</html>

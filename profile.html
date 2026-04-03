@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>My Profile — HyperClutch</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --orange:#ff6b00;
+  --orange-bright:#ff8c00;
+  --orange-dim:rgba(255,107,0,0.10);
+  --orange-glow:rgba(255,107,0,0.28);
+  --yellow:#ffd000;
+  --green:#00e676;
+  --green-dim:rgba(0,230,118,0.08);
+  --red:#ff4d4d;
+  --bg:#060407;
+  --bg2:#0c0810;
+  --bg3:#110d18;
+  --bg4:#160f20;
+  --border:rgba(255,255,255,0.07);
+  --border-o:rgba(255,107,0,0.18);
+  --text:#f4f0ee;
+  --text2:rgba(244,240,238,0.55);
+  --text3:rgba(244,240,238,0.28);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;opacity:0.5;
+}
+
+.grid-bg{
+  position:fixed;inset:0;z-index:-2;
+  background-image:
+    linear-gradient(rgba(255,107,0,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,107,0,0.025) 1px,transparent 1px);
+  background-size:50px 50px;
+}
+
+.top-glow{
+  position:fixed;top:-200px;left:50%;transform:translateX(-50%);
+  width:700px;height:500px;
+  background:radial-gradient(ellipse,rgba(255,107,0,0.06) 0%,transparent 70%);
+  pointer-events:none;z-index:-1;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;width:100%;height:62px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;
+  background:rgba(6,4,7,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  z-index:1000;
+}
+
+.nav-logo{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:20px;font-weight:900;letter-spacing:0.05em;
+  color:var(--text);text-decoration:none;text-transform:uppercase;
+}
+.nav-logo em{color:var(--orange);font-style:normal;}
+
+.nav-right{display:flex;align-items:center;gap:12px;}
+
+.nav-back{
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;font-weight:500;color:var(--text2);
+  text-decoration:none;transition:color 0.2s;
+}
+.nav-back:hover{color:var(--orange);}
+.nav-back svg{width:16px;height:16px;}
+
+/* logout btn */
+.nav-logout{
+  background:transparent;border:1px solid var(--border);
+  color:var(--text3);padding:7px 14px;border-radius:7px;
+  font-size:12px;font-weight:500;cursor:pointer;
+  transition:all 0.2s;letter-spacing:0.04em;
+}
+.nav-logout:hover{border-color:var(--red);color:var(--red);background:rgba(255,77,77,0.06);}
+
+/* ── PAGE ── */
+.page{
+  padding:82px 28px 40px;
+  max-width:1000px;
+  margin:0 auto;
+  position:relative;z-index:1;
+}
+
+/* ── PROFILE HEADER ── */
+.profile-header{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:28px;
+  display:flex;align-items:center;gap:24px;flex-wrap:wrap;
+  margin-bottom:20px;
+  position:relative;overflow:hidden;
+}
+.profile-header::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--orange),transparent);
+}
+.profile-header::after{
+  content:'';position:absolute;right:-30px;top:-30px;
+  width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,107,0,0.06),transparent 70%);
+  pointer-events:none;
+}
+
+/* avatar */
+.avatar-big{
+  width:80px;height:80px;border-radius:16px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--orange),#ff3d00);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:28px;font-weight:900;color:#000;
+  letter-spacing:0.05em;
+  border:2px solid var(--border-o);
+  position:relative;cursor:pointer;
+  transition:all 0.2s;
+}
+.avatar-big:hover{box-shadow:0 0 24px var(--orange-glow);}
+.avatar-edit-badge{
+  position:absolute;bottom:-4px;right:-4px;
+  width:22px;height:22px;border-radius:6px;
+  background:var(--bg3);border:1px solid var(--border-o);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;
+}
+
+.ph-info{flex:1;min-width:0;}
+.ph-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(22px,3vw,32px);font-weight:900;
+  text-transform:uppercase;letter-spacing:0.02em;
+  margin-bottom:4px;
+}
+.ph-email{font-size:13px;color:var(--text3);margin-bottom:10px;letter-spacing:0.02em;}
+
+.ph-badges{display:flex;gap:8px;flex-wrap:wrap;}
+.ph-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 12px;border-radius:100px;
+  font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;
+}
+.badge-player{background:var(--orange-dim);color:var(--orange);border:1px solid var(--border-o);}
+.badge-verified{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,230,118,0.2);}
+.badge-verified::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  background:var(--green);display:block;animation:pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(0.8)}}
+
+.ph-right{display:flex;flex-direction:column;gap:8px;align-items:flex-end;}
+.ph-stat{text-align:right;}
+.ph-stat-val{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:24px;font-weight:900;color:var(--orange);
+  display:block;line-height:1;
+}
+.ph-stat-label{font-size:10px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;}
+
+/* ── MINI STATS ── */
+.mini-stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+  margin-bottom:20px;
+}
+.mini-stat{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:12px;padding:16px;text-align:center;
+  transition:all 0.2s;
+}
+.mini-stat:hover{border-color:var(--border-o);}
+.ms-val{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:26px;font-weight:900;line-height:1;
+  display:block;margin-bottom:4px;
+}
+.ms-val.orange{color:var(--orange);}
+.ms-val.green{color:var(--green);}
+.ms-val.yellow{color:var(--yellow);}
+.ms-val.blue{color:#3b82f6;}
+.ms-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;}
+
+/* ── TWO COL ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+/* ── FORM CARD ── */
+.form-card{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:14px;padding:24px;
+  position:relative;overflow:hidden;
+}
+.form-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--orange),transparent);
+}
+
+.card-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:18px;font-weight:800;text-transform:uppercase;
+  letter-spacing:0.04em;margin-bottom:20px;
+  display:flex;align-items:center;gap:8px;
+}
+.card-title-icon{font-size:16px;}
+
+/* ── FIELDS ── */
+.field{margin-bottom:16px;}
+.field:last-of-type{margin-bottom:0;}
+
+.field-label{
+  display:block;font-size:11px;font-weight:600;
+  letter-spacing:0.10em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:8px;
+}
+
+.field-wrap{position:relative;}
+.field-icon{
+  position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  font-size:14px;pointer-events:none;opacity:0.45;
+}
+
+.field input,
+.field select,
+.field textarea{
+  width:100%;padding:12px 13px 12px 40px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:'DM Sans',sans-serif;
+  font-size:14px;outline:none;transition:all 0.2s;
+  -webkit-appearance:none;
+}
+.field textarea{
+  padding:12px 13px 12px 40px;
+  resize:vertical;min-height:80px;line-height:1.6;
+}
+.field select option{background:var(--bg3);}
+.field input::placeholder,
+.field textarea::placeholder{color:var(--text3);}
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  border-color:var(--orange);
+  background:var(--orange-dim);
+  box-shadow:0 0 0 3px rgba(255,107,0,0.08);
+}
+.field input:disabled{
+  opacity:0.5;cursor:not-allowed;
+}
+.field input.success{border-color:var(--green);}
+.field input.error{border-color:var(--red);background:rgba(255,77,77,0.05);}
+
+.field-hint{font-size:11px;color:var(--text3);margin-top:5px;letter-spacing:0.02em;}
+.field-error{font-size:11px;color:var(--red);margin-top:5px;display:none;}
+
+/* uid verify badge */
+.uid-status{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  font-size:11px;font-weight:600;padding:2px 8px;border-radius:100px;
+  letter-spacing:0.06em;
+}
+.uid-ok{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,230,118,0.2);}
+.uid-empty{display:none;}
+
+/* ── DANGER ZONE ── */
+.danger-card{
+  background:rgba(255,77,77,0.04);
+  border:1px solid rgba(255,77,77,0.15);
+  border-radius:14px;padding:20px;margin-top:16px;
+}
+.danger-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:800;text-transform:uppercase;
+  letter-spacing:0.06em;color:var(--red);margin-bottom:8px;
+}
+.danger-desc{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:16px;}
+.danger-btn{
+  background:transparent;color:var(--red);
+  border:1px solid rgba(255,77,77,0.3);
+  padding:10px 20px;border-radius:8px;
+  font-size:13px;font-weight:500;cursor:pointer;
+  transition:all 0.2s;
+}
+.danger-btn:hover{background:rgba(255,77,77,0.1);border-color:var(--red);}
+
+/* ── SAVE BUTTON ── */
+.save-btn{
+  width:100%;padding:14px;margin-top:20px;
+  background:var(--orange);color:#000;
+  border:none;border-radius:8px;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:17px;font-weight:800;letter-spacing:0.08em;
+  text-transform:uppercase;transition:all 0.25s;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.save-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);
+}
+.save-btn:hover:not(:disabled){
+  background:var(--orange-bright);
+  transform:translateY(-1px);
+  box-shadow:0 8px 28px var(--orange-glow);
+}
+.save-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+
+.spinner{
+  width:17px;height:17px;border-radius:50%;
+  border:2px solid rgba(0,0,0,0.3);border-top-color:#000;
+  animation:spin 0.7s linear infinite;display:none;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── CHANGE PASSWORD ── */
+.cp-toggle{
+  display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;margin-bottom:0;
+}
+.cp-toggle-label{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:16px;font-weight:800;text-transform:uppercase;
+  letter-spacing:0.04em;
+}
+.cp-arrow{
+  font-size:14px;color:var(--text3);
+  transition:transform 0.2s;
+}
+.cp-arrow.open{transform:rotate(180deg);}
+.cp-fields{display:none;margin-top:16px;}
+.cp-fields.open{display:block;}
+
+/* pass toggle eye */
+.pass-toggle{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;
+  color:var(--text3);font-size:15px;padding:2px;transition:color 0.2s;
+}
+.pass-toggle:hover{color:var(--text2);}
+
+/* strength bar */
+.strength-wrap{margin-top:6px;}
+.strength-bar{height:3px;background:var(--border);border-radius:100px;overflow:hidden;}
+.strength-fill{height:100%;border-radius:100px;width:0%;transition:width 0.3s,background 0.3s;}
+.strength-text{font-size:11px;color:var(--text3);margin-top:4px;}
+
+/* ── UPI CARD ── */
+.upi-display{
+  background:var(--bg4);border:1px solid var(--border-o);
+  border-radius:10px;padding:16px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.upi-left{}
+.upi-label{font-size:10px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px;}
+.upi-id{
+  font-family:'Rajdhani',sans-serif;
+  font-size:18px;font-weight:700;color:var(--orange);letter-spacing:0.04em;
+}
+.upi-copy{
+  background:var(--orange-dim);border:1px solid var(--border-o);
+  color:var(--orange);padding:7px 14px;border-radius:6px;
+  font-size:12px;font-weight:600;cursor:pointer;
+  transition:all 0.2s;white-space:nowrap;
+}
+.upi-copy:hover{background:rgba(255,107,0,0.18);}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--bg3);border:1px solid var(--border);
+  padding:14px 24px;border-radius:10px;
+  font-size:13px;font-weight:500;
+  display:flex;align-items:center;gap:10px;
+  z-index:10000;
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.3s;
+  opacity:0;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  max-width:90vw;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast.t-success{border-color:rgba(0,230,118,0.3);color:var(--green);}
+.toast.t-error{border-color:rgba(255,77,77,0.3);color:var(--red);}
+.toast.t-info{border-color:var(--border-o);color:var(--orange);}
+
+/* ── LOADING ── */
+#loading-screen{
+  position:fixed;inset:0;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:99999;transition:opacity 0.5s;
+}
+#loading-screen.hidden{opacity:0;pointer-events:none;}
+.loader-logo{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:32px;font-weight:900;text-transform:uppercase;
+  letter-spacing:0.05em;color:var(--text);margin-bottom:20px;
+}
+.loader-logo em{color:var(--orange);font-style:normal;}
+.loader-bar{width:160px;height:3px;background:var(--border);border-radius:100px;overflow:hidden;}
+.loader-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));border-radius:100px;width:0%;animation:load 1.4s ease forwards;}
+@keyframes load{to{width:100%;}}
+.loader-text{font-size:11px;color:var(--text3);letter-spacing:0.1em;margin-top:10px;}
+
+/* ── CONFIRM MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(6px);z-index:5000;
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--bg3);border:1px solid rgba(255,77,77,0.25);
+  border-radius:14px;max-width:380px;width:100%;padding:28px;
+}
+.modal-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:20px;font-weight:800;text-transform:uppercase;
+  letter-spacing:0.04em;color:var(--red);margin-bottom:10px;
+}
+.modal-desc{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:20px;}
+.modal-actions{display:flex;gap:10px;}
+.modal-confirm{
+  flex:1;padding:12px;background:var(--red);color:#fff;
+  border:none;border-radius:8px;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:15px;font-weight:800;letter-spacing:0.06em;
+  text-transform:uppercase;transition:all 0.2s;
+}
+.modal-confirm:hover{background:#e03333;}
+.modal-cancel{
+  padding:12px 20px;background:transparent;color:var(--text2);
+  border:1px solid var(--border);border-radius:8px;cursor:pointer;
+  font-size:13px;transition:all 0.2s;
+}
+.modal-cancel:hover{border-color:rgba(255,255,255,0.15);color:var(--text);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .two-col{grid-template-columns:1fr;}
+  .mini-stats{grid-template-columns:1fr 1fr;}
+  .profile-header{flex-direction:column;align-items:flex-start;}
+  .ph-right{align-items:flex-start;flex-direction:row;gap:24px;}
+  nav{padding:0 16px;}
+}
+@media(max-width:480px){
+  .page{padding:74px 16px 30px;}
+  .form-card{padding:18px;}
+  .mini-stats{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="top-glow"></div>
+
+<!-- LOADING -->
+<div id="loading-screen">
+  <div class="loader-logo">Hyper<em>Clutch</em></div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+  <div class="loader-text">Loading your profile...</div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">Hyper<em>Clutch</em></a>
+  <div class="nav-right">
+    <a href="dashboard.html" class="nav-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M5 12l7-7M5 12l7 7"/>
+      </svg>
+      Dashboard
+    </a>
+    <button class="nav-logout" onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<!-- PAGE -->
+<div class="page">
+
+  <!-- PROFILE HEADER -->
+  <div class="profile-header">
+    <div class="avatar-big" id="avatar-big">
+      HC
+      <div class="avatar-edit-badge">✏️</div>
+    </div>
+    <div class="ph-info">
+      <div class="ph-name" id="ph-name">Loading...</div>
+      <div class="ph-email" id="ph-email">—</div>
+      <div class="ph-badges">
+        <span class="ph-badge badge-player">🎮 Free Fire Player</span>
+        <span class="ph-badge badge-verified" id="verified-badge" style="display:none;">Verified</span>
+      </div>
+    </div>
+    <div class="ph-right">
+      <div class="ph-stat">
+        <span class="ph-stat-val" id="ph-matches">0</span>
+        <span class="ph-stat-label">Matches</span>
+      </div>
+      <div class="ph-stat">
+        <span class="ph-stat-val" id="ph-wins" style="color:var(--green);">0</span>
+        <span class="ph-stat-label">Wins</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MINI STATS -->
+  <div class="mini-stats">
+    <div class="mini-stat">
+      <span class="ms-val orange" id="ms-matches">0</span>
+      <span class="ms-label">Matches Played</span>
+    </div>
+    <div class="mini-stat">
+      <span class="ms-val green" id="ms-wins">0</span>
+      <span class="ms-label">Matches Won</span>
+    </div>
+    <div class="mini-stat">
+      <span class="ms-val yellow" id="ms-earnings">₹0</span>
+      <span class="ms-label">Total Winnings</span>
+    </div>
+    <div class="mini-stat">
+      <span class="ms-val blue" id="ms-wallet">₹0</span>
+      <span class="ms-label">Wallet Balance</span>
+    </div>
+  </div>
+
+  <!-- TWO COLUMNS -->
+  <div class="two-col">
+
+    <!-- LEFT: Edit Profile -->
+    <div>
+      <div class="form-card">
+        <div class="card-title"><span class="card-title-icon">👤</span> Edit Profile</div>
+
+        <!-- Username -->
+        <div class="field">
+          <label class="field-label">Username</label>
+          <div class="field-wrap">
+            <span class="field-icon">👤</span>
+            <input type="text" id="f-username" placeholder="e.g. HeadshotKing99" maxlength="20" oninput="validateUsername()">
+          </div>
+          <div class="field-hint">3–20 characters, letters/numbers only.</div>
+          <div class="field-error" id="err-username">Invalid username format.</div>
+        </div>
+
+        <!-- Free Fire Name -->
+        <div class="field">
+          <label class="field-label">Free Fire In-Game Name</label>
+          <div class="field-wrap">
+            <span class="field-icon">🎮</span>
+            <input type="text" id="f-ffname" placeholder="Your in-game name" maxlength="20">
+          </div>
+          <div class="field-hint">Must match exactly with your Free Fire profile.</div>
+        </div>
+
+        <!-- Free Fire UID -->
+        <div class="field">
+          <label class="field-label">Free Fire UID</label>
+          <div class="field-wrap">
+            <span class="field-icon">🆔</span>
+            <input type="text" id="f-ffuid" placeholder="e.g. 123456789" maxlength="12" oninput="validateUID()">
+            <span class="uid-status uid-ok uid-empty" id="uid-ok">✓ Valid</span>
+          </div>
+          <div class="field-hint">Found in your Free Fire profile page.</div>
+          <div class="field-error" id="err-uid">UID must be 6–12 digits.</div>
+        </div>
+
+        <!-- Phone -->
+        <div class="field">
+          <label class="field-label">Mobile Number (UPI)</label>
+          <div class="field-wrap">
+            <span class="field-icon">📱</span>
+            <input type="tel" id="f-phone" placeholder="10-digit mobile number" maxlength="10" oninput="validatePhone()">
+          </div>
+          <div class="field-hint">Used to send prize money via UPI.</div>
+          <div class="field-error" id="err-phone">Enter a valid 10-digit Indian mobile number.</div>
+        </div>
+
+        <!-- State / Region -->
+        <div class="field">
+          <label class="field-label">State / Region</label>
+          <div class="field-wrap">
+            <span class="field-icon">📍</span>
+            <select id="f-state">
+              <option value="">Select your state</option>
+              <option>Andhra Pradesh</option><option>Arunachal Pradesh</option>
+              <option>Assam</option><option>Bihar</option><option>Chhattisgarh</option>
+              <option>Goa</option><option>Gujarat</option><option>Haryana</option>
+              <option>Himachal Pradesh</option><option>Jharkhand</option>
+              <option>Karnataka</option><option>Kerala</option>
+              <option>Madhya Pradesh</option><option>Maharashtra</option>
+              <option>Manipur</option><option>Meghalaya</option><option>Mizoram</option>
+              <option>Nagaland</option><option>Odisha</option><option>Punjab</option>
+              <option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option>
+              <option>Telangana</option><option>Tripura</option>
+              <option>Uttar Pradesh</option><option>Uttarakhand</option>
+              <option>West Bengal</option><option>Delhi</option>
+              <option>Jammu & Kashmir</option><option>Ladakh</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Save Button -->
+        <button class="save-btn" id="save-btn" onclick="saveProfile()">
+          <span id="save-btn-text">Save Changes</span>
+          <div class="spinner" id="save-spinner"></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT: UPI + Password + Danger -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+
+      <!-- UPI DISPLAY -->
+      <div class="form-card">
+        <div class="card-title"><span class="card-title-icon">💸</span> UPI / Prize Payout</div>
+        <div class="upi-display" id="upi-display">
+          <div class="upi-left">
+            <div class="upi-label">Your UPI ID</div>
+            <div class="upi-id" id="upi-id-text">—</div>
+          </div>
+          <button class="upi-copy" onclick="copyUPI()">Copy</button>
+        </div>
+        <div class="field-hint" style="margin-top:10px;">
+          Prizes are sent to this UPI ID within 30 minutes of match end. Update your mobile number above to change it.
+        </div>
+      </div>
+
+      <!-- EMAIL (readonly) -->
+      <div class="form-card">
+        <div class="card-title"><span class="card-title-icon">✉️</span> Account Email</div>
+        <div class="field">
+          <label class="field-label">Registered Email</label>
+          <div class="field-wrap">
+            <span class="field-icon">✉️</span>
+            <input type="email" id="f-email" disabled>
+          </div>
+          <div class="field-hint">Email cannot be changed. Contact support if needed.</div>
+        </div>
+      </div>
+
+      <!-- CHANGE PASSWORD -->
+      <div class="form-card">
+        <div class="card-title cp-toggle" onclick="toggleCP()">
+          <span><span class="card-title-icon">🔒</span> Change Password</span>
+          <span class="cp-arrow" id="cp-arrow">▾</span>
+        </div>
+        <div class="cp-fields" id="cp-fields">
+
+          <div class="field" style="margin-top:4px;">
+            <label class="field-label">Current Password</label>
+            <div class="field-wrap">
+              <span class="field-icon">🔒</span>
+              <input type="password" id="cp-current" placeholder="Enter current password">
+              <button class="pass-toggle" type="button" onclick="togglePassVis('cp-current',this)">👁</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label">New Password</label>
+            <div class="field-wrap">
+              <span class="field-icon">🔒</span>
+              <input type="password" id="cp-new" placeholder="Min. 8 characters" oninput="checkStrength()">
+              <button class="pass-toggle" type="button" onclick="togglePassVis('cp-new',this)">👁</button>
+            </div>
+            <div class="strength-wrap">
+              <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+              <div class="strength-text" id="strength-text"></div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label">Confirm New Password</label>
+            <div class="field-wrap">
+              <span class="field-icon">🔒</span>
+              <input type="password" id="cp-confirm" placeholder="Re-enter new password">
+              <button class="pass-toggle" type="button" onclick="togglePassVis('cp-confirm',this)">👁</button>
+            </div>
+            <div class="field-error" id="err-cp-confirm">Passwords don't match.</div>
+          </div>
+
+          <button class="save-btn" onclick="changePassword()" style="margin-top:12px;">
+            <span>Update Password</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- DANGER ZONE -->
+      <div class="danger-card">
+        <div class="danger-title">⚠️ Danger Zone</div>
+        <div class="danger-desc">
+          Deleting your account is permanent. All your match history, winnings data and profile info will be lost. Any pending wallet balance must be withdrawn first.
+        </div>
+        <button class="danger-btn" onclick="openDeleteModal()">Delete My Account</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-overlay" id="delete-modal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-title">⚠️ Delete Account?</div>
+    <div class="modal-desc">
+      This action is <strong style="color:var(--red)">permanent and cannot be undone</strong>. All your data, match history and profile will be deleted immediately. Are you absolutely sure?
+    </div>
+    <div class="modal-actions">
+      <button class="modal-confirm" onclick="deleteAccount()">Yes, Delete</button>
+      <button class="modal-cancel" onclick="closeDeleteModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+<script>
+// Firebase init
+const firebaseConfig = {
+  apiKey:"AIzaSyDIA2I6-htEdMxbxxsqKkeUlq86vJjOpRo",
+  authDomain:"hyperclutch.firebaseapp.com",
+  projectId:"hyperclutch",
+  appId:"1:781538384038:web:002bb30ad711c3deb3fc67"
+};
+if(!firebase.apps.length){ firebase.initializeApp(firebaseConfig); }
+const auth = firebase.auth();
+const db   = firebase.firestore();
+
+let currentUser = null;
+
+// ── AUTH GUARD ──
+auth.onAuthStateChanged(async user => {
+  if(!user){ window.location.href = 'login.html'; return; }
+  currentUser = user;
+  await loadProfile(user);
+});
+
+// ── LOAD PROFILE ──
+async function loadProfile(user){
+  try {
+    const doc  = await db.collection('users').doc(user.uid).get();
+    const data = doc.exists ? doc.data() : {};
+
+    const name     = data.username       || user.displayName || '';
+    const ffname   = data.freefire_name  || '';
+    const ffuid    = data.freefire_uid   || '';
+    const phone    = data.phone          || '';
+    const state    = data.state          || '';
+    const wallet   = data.wallet         || 0;
+    const matches  = data.matchesPlayed  || 0;
+    const wins     = data.matchesWon     || 0;
+    const earnings = data.totalWinnings  || 0;
+    const initials = name ? name.slice(0,2).toUpperCase() : 'HC';
+    const upiId    = phone ? phone + '@upi' : (data.upi || '—');
+
+    // Header
+    document.getElementById('avatar-big').childNodes[0].textContent = initials;
+    document.getElementById('ph-name').textContent    = name || 'Player';
+    document.getElementById('ph-email').textContent   = user.email || '';
+    document.getElementById('ph-matches').textContent = matches;
+    document.getElementById('ph-wins').textContent    = wins;
+
+    // Show verified badge if ffuid set
+    if(ffuid){
+      document.getElementById('verified-badge').style.display = 'inline-flex';
+    }
+
+    // Mini stats
+    document.getElementById('ms-matches').textContent  = matches;
+    document.getElementById('ms-wins').textContent     = wins;
+    document.getElementById('ms-earnings').textContent = '₹' + earnings;
+    document.getElementById('ms-wallet').textContent   = '₹' + wallet;
+
+    // Form fields
+    document.getElementById('f-username').value = name;
+    document.getElementById('f-ffname').value   = ffname;
+    document.getElementById('f-ffuid').value    = ffuid;
+    document.getElementById('f-phone').value    = phone;
+    document.getElementById('f-email').value    = user.email || '';
+
+    // State dropdown
+    const sel = document.getElementById('f-state');
+    for(let i=0; i<sel.options.length; i++){
+      if(sel.options[i].text === state){ sel.selectedIndex = i; break; }
+    }
+
+    // UPI
+    document.getElementById('upi-id-text').textContent = upiId;
+    if(ffuid){ document.getElementById('uid-ok').classList.remove('uid-empty'); }
+
+    // Hide loader
+    setTimeout(() => {
+      const ls = document.getElementById('loading-screen');
+      ls.classList.add('hidden');
+      setTimeout(() => ls.remove(), 500);
+    }, 1400);
+
+  } catch(err){
+    console.error(err);
+    hideLoader();
+  }
+}
+
+function hideLoader(){
+  const ls = document.getElementById('loading-screen');
+  if(ls){ ls.classList.add('hidden'); setTimeout(() => ls.remove(), 500); }
+}
+
+// ── VALIDATION ──
+function validateUsername(){
+  const val = document.getElementById('f-username').value.trim();
+  const ok  = /^[a-zA-Z0-9_]{3,20}$/.test(val);
+  const err = document.getElementById('err-username');
+  const inp = document.getElementById('f-username');
+  if(!ok && val !== ''){ inp.classList.add('error'); err.style.display='block'; }
+  else { inp.classList.remove('error'); err.style.display='none'; }
+  return ok;
+}
+
+function validateUID(){
+  const val = document.getElementById('f-ffuid').value.trim();
+  const ok  = /^\d{6,12}$/.test(val);
+  const badge = document.getElementById('uid-ok');
+  const err   = document.getElementById('err-uid');
+  const inp   = document.getElementById('f-ffuid');
+  if(ok){
+    inp.classList.remove('error'); err.style.display='none';
+    badge.classList.remove('uid-empty');
+  } else if(val !== ''){
+    inp.classList.add('error'); err.style.display='block';
+    badge.classList.add('uid-empty');
+  } else {
+    inp.classList.remove('error'); err.style.display='none';
+    badge.classList.add('uid-empty');
+  }
+  return ok || val === '';
+}
+
+function validatePhone(){
+  const val = document.getElementById('f-phone').value.trim();
+  const ok  = /^[6-9]\d{9}$/.test(val);
+  const err = document.getElementById('err-phone');
+  const inp = document.getElementById('f-phone');
+  if(!ok && val !== ''){ inp.classList.add('error'); err.style.display='block'; }
+  else { inp.classList.remove('error'); err.style.display='none'; }
+  // Update UPI preview live
+  document.getElementById('upi-id-text').textContent = ok ? val+'@upi' : '—';
+  return ok;
+}
+
+// ── SAVE PROFILE ──
+async function saveProfile(){
+  const username = document.getElementById('f-username').value.trim();
+  const ffname   = document.getElementById('f-ffname').value.trim();
+  const ffuid    = document.getElementById('f-ffuid').value.trim();
+  const phone    = document.getElementById('f-phone').value.trim();
+  const state    = document.getElementById('f-state').value;
+
+  // Validate
+  if(!validateUsername()){ showToast('❌ Fix the username field.','t-error'); return; }
+  if(!username){ showToast('❌ Username is required.','t-error'); return; }
+  if(phone && !/^[6-9]\d{9}$/.test(phone)){ showToast('❌ Fix the mobile number.','t-error'); return; }
+  if(ffuid && !/^\d{6,12}$/.test(ffuid)){ showToast('❌ Fix the Free Fire UID.','t-error'); return; }
+
+  // Loading
+  const btn  = document.getElementById('save-btn');
+  const text = document.getElementById('save-btn-text');
+  const spin = document.getElementById('save-spinner');
+  btn.disabled=true; text.textContent='Saving...'; spin.style.display='block';
+
+  try {
+    const updateData = {
+      username:      username,
+      freefire_name: ffname,
+      freefire_uid:  ffuid,
+      phone:         phone,
+      state:         state,
+      upi:           phone ? phone+'@upi' : '',
+      updatedAt:     firebase.firestore.FieldValue.serverTimestamp(),
+    };
+
+    await db.collection('users').doc(currentUser.uid).update(updateData);
+
+    // Update display name in Firebase Auth
+    await currentUser.updateProfile({ displayName: username });
+
+    // Update UI
+    const initials = username.slice(0,2).toUpperCase();
+    document.getElementById('avatar-big').childNodes[0].textContent = initials;
+    document.getElementById('ph-name').textContent = username;
+    if(ffuid) document.getElementById('verified-badge').style.display='inline-flex';
+
+    showToast('✅ Profile saved successfully!','t-success');
+
+  } catch(err){
+    let msg = '❌ Failed to save profile. Try again.';
+    if(err.code === 'not-found') msg = '❌ Profile not found. Please contact support.';
+    if(err.code === 'permission-denied') msg = '❌ Permission denied. Please log in again.';
+    showToast(msg,'t-error');
+  } finally {
+    btn.disabled=false; text.textContent='Save Changes'; spin.style.display='none';
+  }
+}
+
+// ── CHANGE PASSWORD ──
+async function changePassword(){
+  const current = document.getElementById('cp-current').value;
+  const newPw   = document.getElementById('cp-new').value;
+  const confirm = document.getElementById('cp-confirm').value;
+  const errEl   = document.getElementById('err-cp-confirm');
+
+  if(!current){ showToast('❌ Enter your current password.','t-error'); return; }
+  if(newPw.length < 8){ showToast('❌ New password must be at least 8 characters.','t-error'); return; }
+  if(newPw !== confirm){
+    errEl.style.display='block';
+    document.getElementById('cp-confirm').classList.add('error');
+    showToast('❌ Passwords do not match.','t-error');
+    return;
+  }
+  errEl.style.display='none';
+  document.getElementById('cp-confirm').classList.remove('error');
+
+  try {
+    // Re-authenticate first
+    const credential = firebase.auth.EmailAuthProvider.credential(currentUser.email, current);
+    await currentUser.reauthenticateWithCredential(credential);
+    await currentUser.updatePassword(newPw);
+
+    // Clear fields
+    document.getElementById('cp-current').value = '';
+    document.getElementById('cp-new').value     = '';
+    document.getElementById('cp-confirm').value = '';
+    document.getElementById('strength-fill').style.width = '0%';
+    document.getElementById('strength-text').textContent = '';
+
+    showToast('✅ Password updated successfully!','t-success');
+    toggleCP(); // close the section
+
+  } catch(err){
+    let msg = '❌ Failed to update password.';
+    if(err.code === 'auth/wrong-password')           msg = '❌ Current password is incorrect.';
+    if(err.code === 'auth/weak-password')            msg = '❌ New password is too weak.';
+    if(err.code === 'auth/requires-recent-login')    msg = '❌ Please log out and log in again first.';
+    if(err.code === 'auth/network-request-failed')   msg = '❌ No internet connection.';
+    showToast(msg,'t-error');
+  }
+}
+
+// ── PASSWORD STRENGTH ──
+function checkStrength(){
+  const pw   = document.getElementById('cp-new').value;
+  const fill = document.getElementById('strength-fill');
+  const text = document.getElementById('strength-text');
+  if(!pw){ fill.style.width='0%'; text.textContent=''; return; }
+  let score = 0;
+  if(pw.length>=8) score++;
+  if(pw.length>=12) score++;
+  if(/[A-Z]/.test(pw)) score++;
+  if(/[0-9]/.test(pw)) score++;
+  if(/[^A-Za-z0-9]/.test(pw)) score++;
+  const levels=[
+    {pct:'20%',color:'#ff4d4d',label:'Very weak'},
+    {pct:'40%',color:'#ff8800',label:'Weak'},
+    {pct:'60%',color:'#ffd000',label:'Fair'},
+    {pct:'80%',color:'#a3e635',label:'Strong'},
+    {pct:'100%',color:'#00e676',label:'Very strong'},
+  ];
+  const l = levels[Math.min(score-1,4)] || levels[0];
+  fill.style.width=l.pct; fill.style.background=l.color;
+  text.style.color=l.color; text.textContent=l.label;
+}
+
+// ── TOGGLE PASSWORD VISIBILITY ──
+function togglePassVis(id, btn){
+  const inp = document.getElementById(id);
+  if(inp.type==='password'){ inp.type='text'; btn.textContent='🙈'; }
+  else { inp.type='password'; btn.textContent='👁'; }
+}
+
+// ── CHANGE PASSWORD TOGGLE ──
+function toggleCP(){
+  const fields = document.getElementById('cp-fields');
+  const arrow  = document.getElementById('cp-arrow');
+  fields.classList.toggle('open');
+  arrow.classList.toggle('open');
+}
+
+// ── COPY UPI ──
+function copyUPI(){
+  const upi = document.getElementById('upi-id-text').textContent;
+  if(upi === '—'){ showToast('❌ No UPI ID set. Add your mobile number.','t-error'); return; }
+  navigator.clipboard.writeText(upi)
+    .then(() => showToast('✅ UPI ID copied: ' + upi,'t-success'))
+    .catch(() => showToast('❌ Could not copy. Please copy manually.','t-error'));
+}
+
+// ── DELETE ACCOUNT ──
+function openDeleteModal(){ document.getElementById('delete-modal').classList.add('open'); }
+function closeDeleteModal(){ document.getElementById('delete-modal').classList.remove('open'); }
+function closeModalOutside(e){ if(e.target===document.getElementById('delete-modal')) closeDeleteModal(); }
+
+async function deleteAccount(){
+  try {
+    await db.collection('users').doc(currentUser.uid).delete();
+    await currentUser.delete();
+    window.location.href = 'index.html';
+  } catch(err){
+    closeDeleteModal();
+    let msg = '❌ Account deletion failed.';
+    if(err.code==='auth/requires-recent-login') msg = '❌ Please log out and log in again before deleting.';
+    showToast(msg,'t-error');
+  }
+}
+
+// ── LOGOUT ──
+function logout(){
+  auth.signOut().then(() => window.location.href = 'login.html');
+}
+
+// ── TOAST ──
+function showToast(msg, type='t-success'){
+  const t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+// Escape closes modal
+document.addEventListener('keydown', e => {
+  if(e.key==='Escape') closeDeleteModal();
+});
+</script>
+</body>
+</html>
