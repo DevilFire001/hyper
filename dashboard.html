@@ -727,12 +727,14 @@ nav{
     </div>
   </div>
 
-  <div class="nav-right">
-    <!-- Wallet -->
-    <div href="withdraw.html" class="sidebar-item" onclick="setActive(this)">
-      <span class="wp-icon">💰</span>
-      ₹<span id="nav-wallet">0</span>
-    </div>
+ <div class="nav-right">
+  <!-- Wallet -->
+  <div class="wallet-pill" 
+       onclick="showToast('💳 Wallet coming soon in Phase 3!','t-info'); window.location.href='withdraw.html';">
+    <span class="wp-icon">💰</span>
+    ₹<span id="nav-wallet">0</span>
+  </div>
+</div>
 
     <!-- Notif -->
     <div class="notif-btn" onclick="showToast('🔔 Tonight\'s match starts at 7 PM! Entry ₹20','t-info')">
