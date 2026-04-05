@@ -1,0 +1,121 @@
+{
+  "rules": {
+
+    // ╔══════════════════════════════════════════════════════════════╗
+    // ║       HYPERCLUTCH — REALTIME DATABASE SECURITY RULES        ║
+    // ║       Wallet protection · Anti-fraud · Per-field control     ║
+    // ╚══════════════════════════════════════════════════════════════╝
+
+    // ─────────────────────────────────────────
+    //  USERS  /users/{uid}
+    // ─────────────────────────────────────────
+    // Profile data lives in Firestore.
+    // RTDB only holds: wallet, joinedTournaments
+    // ─────────────────────────────────────────
+    "users": {
+      "$uid": {
+
+        // ── WALLET ───────────────────────────
+        // User can READ their own wallet
+        // ONLY ADMIN can WRITE wallet (credit/deduct after approval)
+        // This is the most critical rule — prevents wallet hacking
+        "wallet": {
+          ".read":  "auth != null && (auth.uid === $uid || auth.uid === 'qeGyCVDkhdR3dVBPPqgbREjYMUT2')",
+          // User CAN write their own wallet ONLY to deduct (new < old) — for tournament join fee
+          // Admin can write freely (credit after payment approval, deduct after withdrawal)
+          // Prevents hacking: user can only decrease, never increase their own wallet
+          ".write": "auth != null && (auth.uid === 'qeGyCVDkhdR3dVBPPqgbREjYMUT2' || (auth.uid === $uid && newData.isNumber() && newData.val() < data.val()))",
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+
+        // ── JOINED TOURNAMENTS ───────────────
+        // User can read their own joined list
+        // User can WRITE (mark as joined) — set to true only
+        // Admin can also write (for manual overrides)
+        "joinedTournaments": {
+          ".read":  "auth != null && (auth.uid === $uid || auth.uid === 'qeGyCVDkhdR3dVBPPqgbREjYMUT2')",
+          ".write": "auth != null && (auth.uid === $uid || auth.uid === 'qeGyCVDkhdR3dVBPPqgbREjYMUT2')",
+          "$tournamentId": {
+            // Can only write true — cannot delete own join record (anti-cheat)
+            ".validate": "newData.isBoolean() && newData.val() === true"
+          }
+        },
+
+        // ── OTHER USER FIELDS (legacy) ────────
+        // Some older pages may still write name/freefire_uid to RTDB.
+        // Keep this open for own user only.
+        // NOTE: Primary profile data should be in Firestore.
+        "name":         { ".read": "auth != null && (auth.uid === $uid || auth.uid === 'qeGyCVDkhdR3dVBPPqgbREjYMUT2')", ".write": "auth != null && auth.uid === $uid", ".validate": "newData.isString()" },
+        "username":     { ".read": "auth != null && (auth.uid === $uid || auth.uid === 'qeGyCVDkhdR3dVBPPqgbREjYMUT2')", ".write": "auth != null && auth.uid === $uid", ".validate": "newData.isString()" },
+        "freefire_uid": { ".read": "auth != null && (auth.uid === $uid || auth.uid === 'qeGyCVDkhdR3dVBPPqgbREjYMUT2')", ".write": "auth != null && auth.uid === $uid", ".validate": "newData.isString()" },
+        "freefire_name":{ ".read": "auth != null && (auth.uid === $uid || auth.uid === 'qeGyCVDkhdR3dVBPPqgbREjYMUT2')", ".write": "auth != null && auth.uid === $uid", ".validate": "newData.isString()" },
+        "phone":        { ".read": "auth != null && (auth.uid === $uid || auth.uid === 'qeGyCVDkhdR3dVBPPqgbREjYMUT2')", ".write": "auth != null && auth.uid === $uid", ".validate": "newData.isString()" },
+
+        // ── DEFAULT DENY for anything else ───
+        // Any field not listed above cannot be read or written by users.
+        // Admin can still read the full user node.
+        ".read":  "auth != null && auth.uid === 'qeGyCVDkhdR3dVBPPqgbREjYMUT2'",
+        ".write": false
+      }
+    },
+
+    // ─────────────────────────────────────────
+    //  TRANSACTIONS  /transactions/{uid}
+    // ─────────────────────────────────────────
+    // Admin writes transaction history after
+    // approving payments or distributing prizes.
+    // User can read their own transaction log.
+    // ─────────────────────────────────────────
+    "transactions": {
+      "$uid": {
+        ".read":  "auth != null && (auth.uid === $uid || auth.uid === 'qeGyCVDkhdR3dVBPPqgbREjYMUT2')",
+        ".write": "auth != null && auth.uid === 'qeGyCVDkhdR3dVBPPqgbREjYMUT2'"
+      }
+    },
+
+    // ─────────────────────────────────────────
+    //  ADMIN DATA  /admin
+    // ─────────────────────────────────────────
+    // Admin-only node for platform settings,
+    // UPI ID config, match room IDs etc.
+    // Fully locked — admin read/write only.
+    // ─────────────────────────────────────────
+    "admin": {
+      ".read":  "auth != null && auth.uid === 'qeGyCVDkhdR3dVBPPqgbREjYMUT2'",
+      ".write": "auth != null && auth.uid === 'qeGyCVDkhdR3dVBPPqgbREjYMUT2'"
+    },
+
+    // ─────────────────────────────────────────
+    //  MATCH ROOMS  /matchRooms/{tournamentId}
+    // ─────────────────────────────────────────
+    // Admin sets room ID + password before 7 PM.
+    // Only joined players can read the room details.
+    // NOTE: Room ID visibility is controlled by
+    //       checking joinedTournaments in the rule.
+    // ─────────────────────────────────────────
+    "matchRooms": {
+      "$tournamentId": {
+        // Read: only users who have joined this tournament
+        ".read":  "auth != null && (root.child('users').child(auth.uid).child('joinedTournaments').child($tournamentId).val() === true || auth.uid === 'qeGyCVDkhdR3dVBPPqgbREjYMUT2')",
+        // Write: only admin
+        ".write": "auth != null && auth.uid === 'qeGyCVDkhdR3dVBPPqgbREjYMUT2'",
+        "roomId":   { ".validate": "newData.isString()" },
+        "password": { ".validate": "newData.isString()" },
+        "link":     { ".validate": "newData.isString()" },
+        "status":   { ".validate": "newData.isString()" }
+      }
+    },
+
+    // ─────────────────────────────────────────
+    //  CATCH-ALL — deny everything else
+    // ─────────────────────────────────────────
+    // Any path not matched above is fully denied.
+    // This is the most important safety net.
+    // ─────────────────────────────────────────
+    "$other": {
+      ".read":  false,
+      ".write": false
+    }
+
+  }
+}

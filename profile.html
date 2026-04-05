@@ -1028,13 +1028,20 @@ function closeModalOutside(e){ if(e.target===document.getElementById('delete-mod
 
 async function deleteAccount(){
   try {
-    await db.collection('users').doc(currentUser.uid).delete();
+    // Firestore rule: allow delete: if isAdmin() only
+    // So we mark the doc as deleted instead — admin cleans it up
+    await db.collection('users').doc(currentUser.uid).update({
+      accountDeleted: true,
+      deletedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      username: '[DELETED]',
+    });
     await currentUser.delete();
     window.location.href = 'index.html';
   } catch(err){
     closeDeleteModal();
     let msg = '❌ Account deletion failed.';
     if(err.code==='auth/requires-recent-login') msg = '❌ Please log out and log in again before deleting.';
+    if(err.code==='permission-denied') msg = '❌ Permission denied. Log out and back in first.';
     showToast(msg,'t-error');
   }
 }

@@ -83,6 +83,7 @@ nav{
 .nav-back:hover{color:var(--orange);}
 .nav-back svg{width:15px;height:15px;}
 
+/* wallet pill */
 .wallet-pill{
   display:flex;align-items:center;gap:7px;
   background:var(--orange-dim);border:1px solid var(--border-o);
@@ -92,6 +93,7 @@ nav{
   letter-spacing:0.04em;cursor:default;
 }
 
+/* avatar */
 .nav-avatar{
   width:34px;height:34px;border-radius:8px;
   background:linear-gradient(135deg,var(--orange),#ff3d00);
@@ -111,6 +113,7 @@ nav{
   position:relative;z-index:1;
 }
 
+/* ── PAGE HEADER ── */
 .page-header{
   display:flex;align-items:center;justify-content:space-between;
   flex-wrap:wrap;gap:16px;margin-bottom:28px;
@@ -125,7 +128,10 @@ nav{
 
 .page-sub{font-size:13px;color:var(--text2);margin-top:4px;}
 
-.filter-tabs{display:flex;gap:8px;flex-wrap:wrap;}
+/* filter tabs */
+.filter-tabs{
+  display:flex;gap:8px;flex-wrap:wrap;
+}
 .filter-tab{
   padding:7px 16px;border-radius:7px;
   font-size:13px;font-weight:500;letter-spacing:0.04em;
@@ -144,10 +150,11 @@ nav{
   background:rgba(255,208,0,0.06);
   border:1px solid rgba(255,208,0,0.2);
   border-radius:10px;padding:14px 18px;
-  display:none;align-items:center;justify-content:space-between;
+  display:flex;align-items:center;justify-content:space-between;
   gap:12px;flex-wrap:wrap;
   margin-bottom:20px;
   font-size:13px;color:var(--yellow);
+  display:none;
 }
 .balance-warn a{color:var(--orange);text-decoration:none;font-weight:600;}
 .balance-warn a:hover{text-decoration:underline;}
@@ -165,29 +172,7 @@ nav{
 }
 .empty-state p{font-size:13px;line-height:1.8;}
 
-/* ── ERROR STATE ── */
-.error-state{
-  text-align:center;padding:60px 20px;
-  background:rgba(255,77,77,0.05);
-  border:1px solid rgba(255,77,77,0.15);
-  border-radius:16px;margin-bottom:16px;
-}
-.error-state h3{
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:20px;font-weight:800;text-transform:uppercase;
-  letter-spacing:0.04em;color:var(--red);margin-bottom:8px;
-}
-.error-state p{font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:16px;}
-.btn-retry{
-  padding:10px 24px;background:var(--orange);color:#000;
-  border:none;border-radius:8px;cursor:pointer;
-  font-family:'Barlow Condensed',sans-serif;
-  font-size:15px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;
-  transition:all 0.2s;
-}
-.btn-retry:hover{background:var(--orange-bright);box-shadow:0 0 16px var(--orange-glow);}
-
-/* ── SKELETON ── */
+/* ── LOADING SKELETON ── */
 .skeleton{
   background:var(--bg3);border:1px solid var(--border);
   border-radius:16px;padding:24px;margin-bottom:16px;
@@ -210,6 +195,7 @@ nav{
 }
 .t-card:hover{border-color:var(--border-o);box-shadow:0 8px 40px rgba(255,107,0,0.07);}
 
+/* top accent when open */
 .t-card.status-open::before{
   content:'';position:absolute;top:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,transparent,var(--green),transparent);
@@ -228,7 +214,10 @@ nav{
   background:linear-gradient(90deg,transparent,var(--orange),transparent);
 }
 
-.t-card-img{position:relative;height:160px;overflow:hidden;}
+/* card image */
+.t-card-img{
+  position:relative;height:160px;overflow:hidden;
+}
 .t-card-img img{
   width:100%;height:100%;object-fit:cover;
   filter:brightness(0.65) saturate(1.2);
@@ -240,6 +229,7 @@ nav{
   background:linear-gradient(to bottom,transparent 30%,var(--bg3) 100%);
 }
 
+/* status badge */
 .t-status-badge{
   position:absolute;top:12px;left:12px;
   padding:4px 12px;border-radius:100px;
@@ -254,6 +244,7 @@ nav{
 .badge-full{background:rgba(255,77,77,0.12);color:var(--red);border:1px solid rgba(255,77,77,0.2);}
 .badge-started{background:rgba(255,77,77,0.12);color:var(--red);border:1px solid rgba(255,77,77,0.2);}
 
+/* prize badge top right */
 .t-prize-badge{
   position:absolute;top:12px;right:12px;
   background:rgba(0,0,0,0.7);border:1px solid rgba(255,208,0,0.3);
@@ -265,21 +256,28 @@ nav{
 }
 .t-prize-badge small{font-size:10px;color:var(--text3);display:block;text-align:center;letter-spacing:0.08em;text-transform:uppercase;margin-top:1px;}
 
+/* card body */
 .t-card-body{padding:20px 22px;}
+
 .t-card-top{
   display:flex;align-items:flex-start;justify-content:space-between;
   gap:12px;margin-bottom:16px;flex-wrap:wrap;
 }
+
 .t-card-name{
   font-family:'Barlow Condensed',sans-serif;
   font-size:22px;font-weight:900;text-transform:uppercase;
   letter-spacing:0.04em;line-height:1;
 }
-.t-card-type{font-size:12px;color:var(--text3);margin-top:4px;letter-spacing:0.06em;}
+.t-card-type{
+  font-size:12px;color:var(--text3);margin-top:4px;letter-spacing:0.06em;
+}
 
+/* info grid */
 .t-info-grid{
   display:grid;grid-template-columns:repeat(4,1fr);
-  gap:0;border:1px solid var(--border);border-radius:10px;
+  gap:0;
+  border:1px solid var(--border);border-radius:10px;
   overflow:hidden;margin-bottom:16px;
 }
 .t-info-item{
@@ -289,7 +287,8 @@ nav{
 .t-info-item:last-child{border-right:none;}
 .t-info-val{
   font-family:'Barlow Condensed',sans-serif;
-  font-size:18px;font-weight:800;line-height:1;display:block;margin-bottom:3px;
+  font-size:18px;font-weight:800;line-height:1;display:block;
+  margin-bottom:3px;
 }
 .t-info-val.orange{color:var(--orange);}
 .t-info-val.yellow{color:var(--yellow);}
@@ -297,6 +296,7 @@ nav{
 .t-info-val.white{color:var(--text);}
 .t-info-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;}
 
+/* slots bar */
 .slots-section{margin-bottom:16px;}
 .slots-header{
   display:flex;justify-content:space-between;align-items:center;
@@ -312,17 +312,20 @@ nav{
 .slots-fill.almost{background:linear-gradient(90deg,var(--yellow),var(--orange));}
 .slots-fill.full{background:linear-gradient(90deg,var(--orange),var(--red));}
 
+/* countdown */
 .t-countdown{
   display:flex;align-items:center;gap:8px;
   padding:10px 14px;
   background:var(--bg4);border:1px solid var(--border);
-  border-radius:8px;margin-bottom:14px;font-size:13px;
+  border-radius:8px;margin-bottom:14px;
+  font-size:13px;
 }
 .countdown-icon{font-size:14px;flex-shrink:0;}
 .countdown-text{color:var(--text2);}
 .countdown-time{
   font-family:'Barlow Condensed',sans-serif;
-  font-weight:800;font-size:15px;margin-left:auto;letter-spacing:0.06em;
+  font-weight:800;font-size:15px;margin-left:auto;
+  letter-spacing:0.06em;
 }
 .countdown-time.urgent{color:var(--red);animation:urgentPulse 1s ease-in-out infinite;}
 @keyframes urgentPulse{0%,100%{opacity:1}50%{opacity:0.5}}
@@ -330,8 +333,12 @@ nav{
 .countdown-time.soon{color:var(--orange);}
 .countdown-time.started{color:var(--red);}
 
-.t-card-footer{display:flex;gap:10px;flex-wrap:wrap;}
+/* card footer */
+.t-card-footer{
+  display:flex;gap:10px;flex-wrap:wrap;
+}
 
+/* action buttons */
 .btn-join{
   flex:1;padding:13px;
   background:var(--orange);color:#000;
@@ -396,6 +403,14 @@ nav{
 }
 .btn-addmoney:hover{border-color:var(--border-o);color:var(--orange);}
 
+/* spinner for join button */
+.btn-spinner{
+  width:16px;height:16px;border-radius:50%;
+  border:2px solid rgba(0,0,0,0.3);border-top-color:#000;
+  animation:spin 0.7s linear infinite;display:none;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
 /* ── CONFIRM MODAL ── */
 .modal-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,0.88);
@@ -439,7 +454,8 @@ nav{
 .modal-detail-val.yellow{color:var(--yellow);}
 
 .modal-balance{
-  font-size:12px;color:var(--text3);text-align:center;margin-bottom:16px;
+  font-size:12px;color:var(--text3);text-align:center;
+  margin-bottom:16px;
 }
 .modal-balance strong{color:var(--orange);}
 
@@ -462,7 +478,6 @@ nav{
   border:2px solid rgba(0,0,0,0.3);border-top-color:#000;
   animation:spin 0.7s linear infinite;display:none;
 }
-@keyframes spin{to{transform:rotate(360deg)}}
 .modal-cancel{
   padding:13px 20px;background:transparent;color:var(--text2);
   border:1px solid var(--border);border-radius:8px;cursor:pointer;
@@ -489,7 +504,7 @@ nav{
 .toast.t-info{border-color:var(--border-o);color:var(--orange);}
 .toast.t-warn{border-color:rgba(255,208,0,0.3);color:var(--yellow);}
 
-/* ── LOADING SCREEN ── */
+/* ── LOADING ── */
 #loading-screen{
   position:fixed;inset:0;background:var(--bg);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -503,7 +518,7 @@ nav{
 }
 .loader-logo em{color:var(--orange);font-style:normal;}
 .loader-bar{width:160px;height:3px;background:var(--border);border-radius:100px;overflow:hidden;}
-.loader-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));border-radius:100px;width:0%;animation:load 1.8s ease forwards;}
+.loader-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));border-radius:100px;width:0%;animation:load 1.4s ease forwards;}
 @keyframes load{to{width:100%;}}
 .loader-text{font-size:11px;color:var(--text3);letter-spacing:0.1em;margin-top:10px;}
 
@@ -532,7 +547,7 @@ nav{
 <div id="loading-screen">
   <div class="loader-logo">Hyper<em>Clutch</em></div>
   <div class="loader-bar"><div class="loader-fill"></div></div>
-  <div class="loader-text" id="loader-text">Loading tournaments...</div>
+  <div class="loader-text">Loading tournaments...</div>
 </div>
 
 <!-- NAV -->
@@ -553,6 +568,7 @@ nav{
 <!-- PAGE -->
 <div class="page">
 
+  <!-- HEADER -->
   <div class="page-header">
     <div>
       <div class="page-title">🎮 Active <span>Tournaments</span></div>
@@ -572,18 +588,8 @@ nav{
 
   <!-- SKELETON LOADERS -->
   <div id="skeletons">
-    <div class="skeleton">
-      <div class="skel-line" style="width:60%;height:20px;margin-bottom:16px;"></div>
-      <div class="skel-line" style="width:90%;"></div>
-      <div class="skel-line" style="width:75%;"></div>
-      <div class="skel-line" style="width:40%;height:40px;margin-top:16px;"></div>
-    </div>
-    <div class="skeleton">
-      <div class="skel-line" style="width:50%;height:20px;margin-bottom:16px;"></div>
-      <div class="skel-line" style="width:85%;"></div>
-      <div class="skel-line" style="width:65%;"></div>
-      <div class="skel-line" style="width:40%;height:40px;margin-top:16px;"></div>
-    </div>
+    <div class="skeleton"><div class="skel-line" style="width:60%;height:20px;margin-bottom:16px;"></div><div class="skel-line" style="width:90%;"></div><div class="skel-line" style="width:75%;"></div><div class="skel-line" style="width:40%;height:40px;margin-top:16px;"></div></div>
+    <div class="skeleton"><div class="skel-line" style="width:50%;height:20px;margin-bottom:16px;"></div><div class="skel-line" style="width:85%;"></div><div class="skel-line" style="width:65%;"></div><div class="skel-line" style="width:40%;height:40px;margin-top:16px;"></div></div>
   </div>
 
   <!-- TOURNAMENT LIST -->
@@ -594,13 +600,6 @@ nav{
     <span class="empty-icon">🎮</span>
     <h3>No Tournaments Found</h3>
     <p>No matches available right now.<br>Check back closer to 7:00 PM for tonight's match.</p>
-  </div>
-
-  <!-- ERROR STATE -->
-  <div id="error-state" style="display:none;" class="error-state">
-    <h3>⚠️ Failed to Load</h3>
-    <p>Could not load tournaments. Check your internet connection and try again.</p>
-    <button class="btn-retry" onclick="retryLoad()">Retry</button>
   </div>
 
 </div>
@@ -633,7 +632,7 @@ nav{
       </div>
 
       <div class="modal-balance">
-        Current balance: <strong>₹<span id="modal-balance">0</span></strong>
+        Current wallet balance: <strong>₹<span id="modal-balance">0</span></strong>
         &nbsp;→&nbsp; After joining: <strong style="color:var(--green);">₹<span id="modal-after">0</span></strong>
       </div>
 
@@ -658,7 +657,7 @@ nav{
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
-// ─── Firebase Init ───────────────────────────────────────────────────────────
+// Firebase
 const firebaseConfig = {
   apiKey:"AIzaSyDIA2I6-htEdMxbxxsqKkeUlq86vJjOpRo",
   authDomain:"hyperclutch.firebaseapp.com",
@@ -667,24 +666,20 @@ const firebaseConfig = {
   databaseURL:"https://hyperclutch-default-rtdb.firebaseio.com/"
 };
 if(!firebase.apps.length){ firebase.initializeApp(firebaseConfig); }
-const auth = firebase.auth();
-const db   = firebase.firestore();
-const rtdb = firebase.database();
+const auth  = firebase.auth();
+const db    = firebase.firestore();
+const rtdb  = firebase.database();
 
-// ─── State ───────────────────────────────────────────────────────────────────
-let currentUser   = null;
-let walletBalance = 0;
-let tournaments   = [];
-let joinedSet     = new Set();
-let currentFilter = 'all';
-let countdownTimer= null;
-let pendingJoin   = null;
-let dataLoaded    = false;  // FIX: track if initial data arrived
+// State
+let currentUser    = null;
+let walletBalance  = 0;
+let tournaments    = [];     // [{id, data, playerCount, joined}]
+let joinedSet      = new Set();
+let currentFilter  = 'all';
+let countdownTimer = null;
+let pendingJoin    = null;   // {id, fee, name, prize, time}
 
-// Safety timeout — hide loading screen after 8s no matter what
-// This prevents infinite loading if Firebase is slow or blocked
-const LOAD_TIMEOUT = setTimeout(() => hideLoader(true), 8000);
-
+// image pool for cards
 const cardImages = [
   'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&q=70',
   'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=70',
@@ -692,100 +687,49 @@ const cardImages = [
   'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=800&q=70',
 ];
 
-// ─── Loader helpers ───────────────────────────────────────────────────────────
-function hideLoader(timedOut) {
-  clearTimeout(LOAD_TIMEOUT);
-  const ls = document.getElementById('loading-screen');
-  if(!ls) return;
-  ls.classList.add('hidden');
-  setTimeout(() => { if(ls.parentNode) ls.remove(); }, 500);
-
-  // If loader timed out before data arrived, show error
-  if(timedOut && !dataLoaded){
-    document.getElementById('skeletons').style.display = 'none';
-    document.getElementById('error-state').style.display = 'block';
-  }
-}
-
-function setLoaderText(msg) {
-  const el = document.getElementById('loader-text');
-  if(el) el.textContent = msg;
-}
-
-function retryLoad() {
-  document.getElementById('error-state').style.display = 'none';
-  document.getElementById('skeletons').style.display = 'block';
-  loadTournaments();
-}
-
-// ─── Auth Guard ───────────────────────────────────────────────────────────────
-auth.onAuthStateChanged(async user => {
-  if(!user){
-    window.location.href = 'login.html';
-    return;
-  }
+// ── AUTH GUARD ──
+auth.onAuthStateChanged(user => {
+  if(!user){ window.location.href = 'login.html'; return; }
   currentUser = user;
 
-  // Set nav avatar
-  try {
-    const doc = await db.collection('users').doc(user.uid).get();
+  // Set nav avatar initials
+  db.collection('users').doc(user.uid).get().then(doc => {
     const name = doc.exists ? (doc.data().username || user.displayName || 'HC') : 'HC';
     document.getElementById('nav-avatar').textContent = name.slice(0,2).toUpperCase();
-  } catch(e) { /* non-critical */ }
+  });
 
-  setLoaderText('Loading your data...');
-
-  // FIX: Load wallet AND joined set before rendering tournaments
-  // Both run in parallel, then tournaments load
-  await Promise.all([
-    loadWallet(),
-    loadJoined()
-  ]);
-
-  setLoaderText('Loading tournaments...');
+  loadWallet();
+  loadJoined();
   loadTournaments();
 });
 
-// ─── Wallet ───────────────────────────────────────────────────────────────────
-function loadWallet() {
-  return new Promise(resolve => {
-    rtdb.ref('users/' + currentUser.uid + '/wallet').on('value', snap => {
-      walletBalance = snap.val() || 0;
-      document.getElementById('nav-wallet').textContent = walletBalance;
-      document.getElementById('modal-balance').textContent = walletBalance;
-      document.getElementById('balance-warn').style.display = walletBalance < 20 ? 'flex' : 'none';
-      if(dataLoaded) renderAll(); // Only re-render after initial load is done
-      resolve(); // FIX: resolve on first value so auth flow can continue
-    }, err => {
-      console.error('Wallet error:', err);
-      resolve(); // Still resolve so page doesn't hang
-    });
+// ── WALLET (Realtime DB) ──
+function loadWallet(){
+  rtdb.ref('users/' + currentUser.uid + '/wallet').on('value', snap => {
+    walletBalance = snap.val() || 0;
+    document.getElementById('nav-wallet').textContent = walletBalance;
+    document.getElementById('modal-balance').textContent = walletBalance;
+    // Show low balance warning if < ₹20
+    document.getElementById('balance-warn').style.display = walletBalance < 20 ? 'flex' : 'none';
+    renderAll();
   });
 }
 
-// ─── Load Joined Set ─────────────────────────────────────────────────────────
-function loadJoined() {
-  return new Promise(resolve => {
-    // FIX: Also listen for real-time updates (not just once)
-    rtdb.ref('users/' + currentUser.uid + '/joinedTournaments').on('value', snap => {
-      joinedSet.clear();
-      snap.forEach(c => joinedSet.add(c.key));
-      if(dataLoaded) renderAll();
-      resolve(); // Resolve on first value
-    }, err => {
-      console.error('Joined set error:', err);
-      resolve();
-    });
+// ── LOAD JOINED (once) ──
+function loadJoined(){
+  rtdb.ref('users/' + currentUser.uid + '/joinedTournaments').once('value').then(snap => {
+    snap.forEach(c => joinedSet.add(c.key));
+    renderAll();
   });
 }
 
-// ─── Load Tournaments ─────────────────────────────────────────────────────────
-function loadTournaments() {
+// ── LOAD TOURNAMENTS ──
+function loadTournaments(){
   db.collection('tournaments')
     .orderBy('datetime', 'asc')
     .onSnapshot(snapshot => {
-
       tournaments = [];
+
       snapshot.forEach(doc => {
         const t = doc.data();
         if(!t.datetime) return;
@@ -793,58 +737,48 @@ function loadTournaments() {
           id: doc.id,
           data: t,
           playerCount: 0,
+          joined: joinedSet.has(doc.id),
         });
       });
 
+      // Hide skeletons
       document.getElementById('skeletons').style.display = 'none';
-      document.getElementById('error-state').style.display = 'none';
-
-      // FIX: Mark data as loaded BEFORE calling renderAll
-      dataLoaded = true;
 
       renderAll();
       listenPlayerCounts();
       startCountdownLoop();
-      hideLoader(false); // FIX: Hide loader only after data arrives
+
+      // Hide loader
+      setTimeout(() => {
+        const ls = document.getElementById('loading-screen');
+        ls.classList.add('hidden');
+        setTimeout(() => ls.remove(), 500);
+      }, 1200);
 
     }, err => {
-      console.error('Tournaments load error:', err);
-      document.getElementById('skeletons').style.display = 'none';
-      document.getElementById('error-state').style.display = 'block';
-      hideLoader(false);
+      console.error(err);
       showToast('❌ Failed to load tournaments. Check your connection.', 't-error');
     });
 }
 
-// ─── Listen Player Counts ─────────────────────────────────────────────────────
-let playerCountListeners = []; // FIX: track listeners to avoid duplicating
-
-function listenPlayerCounts() {
-  // Detach old listeners before adding new ones
-  playerCountListeners.forEach(unsub => unsub());
-  playerCountListeners = [];
-
+// ── LISTEN PLAYER COUNTS ──
+function listenPlayerCounts(){
   tournaments.forEach(t => {
-    const ref = db.collection('tournamentPlayers').doc(t.id).collection('players');
-    const unsub = ref.onSnapshot(snap => {
-      t.playerCount = snap.size;
-      if(dataLoaded) renderAll();
-    }, err => {
-      console.warn('Player count error for', t.id, err);
-    });
-    playerCountListeners.push(unsub);
+    db.collection('tournamentPlayers').doc(t.id)
+      .collection('players').onSnapshot(snap => {
+        t.playerCount = snap.size;
+        renderAll();
+      });
   });
 }
 
-// ─── Render All ───────────────────────────────────────────────────────────────
-function renderAll() {
-  if(!dataLoaded) return; // FIX: Don't render until data is loaded
+// ── RENDER ALL ──
+function renderAll(){
   const container = document.getElementById('tournaments-container');
   const now = Date.now();
 
   let filtered = tournaments.filter(t => {
-    const matchTime = t.data.datetime.toDate ? t.data.datetime.toDate().getTime() : t.data.datetime.getTime();
-    if(currentFilter === 'open')   return !joinedSet.has(t.id) && matchTime > now;
+    if(currentFilter === 'open')   return !joinedSet.has(t.id) && (t.data.datetime.toDate().getTime() > now);
     if(currentFilter === 'joined') return joinedSet.has(t.id);
     return true;
   });
@@ -855,36 +789,34 @@ function renderAll() {
     return;
   }
   document.getElementById('empty-state').style.display = 'none';
+
   container.innerHTML = filtered.map((t,i) => renderCard(t, i, now)).join('');
 }
 
-// ─── Render One Card ──────────────────────────────────────────────────────────
-function renderCard(t, idx, now) {
+// ── RENDER ONE CARD ──
+function renderCard(t, idx, now){
   const {id, data, playerCount} = t;
-  // FIX: Guard against missing/non-Firestore timestamps
-  const matchTime = data.datetime && data.datetime.toDate ? data.datetime.toDate() : new Date(data.datetime);
+  const matchTime = data.datetime.toDate();
   const diff      = matchTime.getTime() - now;
   const isJoined  = joinedSet.has(id);
-  const maxP      = data.maxPlayers || 50;
-  const isFull    = playerCount >= maxP;
+  const isFull    = playerCount >= (data.maxPlayers || 50);
   const isStarted = diff <= 0;
-  const isClosing = diff > 0 && diff <= 5 * 60 * 1000;
-  const slotPct   = Math.min((playerCount / maxP) * 100, 100);
-  const slotsLeft = Math.max(maxP - playerCount, 0);
+  const isClosing = diff > 0 && diff <= 5 * 60 * 1000; // 5 min warning
+  const slotPct   = Math.min((playerCount / (data.maxPlayers || 50)) * 100, 100);
+  const slotsLeft = Math.max((data.maxPlayers || 50) - playerCount, 0);
   const img       = cardImages[idx % cardImages.length];
-  const entryFee  = data.entry_fee  || 20;
-  const prize     = data.winning_prize || 800;
-  const perKill   = data.per_kill   || 10;
 
   const formattedDate = matchTime.toLocaleDateString('en-IN', {day:'2-digit',month:'short'});
   const formattedTime = matchTime.toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit',hour12:true}).toUpperCase();
 
+  // Status class
   let statusClass = 'status-open';
-  if(isStarted)      statusClass = 'status-started';
-  else if(isJoined)  statusClass = 'status-joined';
-  else if(isFull)    statusClass = 'status-full';
+  if(isStarted) statusClass = 'status-started';
+  else if(isJoined) statusClass = 'status-joined';
+  else if(isFull) statusClass = 'status-full';
   else if(isClosing) statusClass = 'status-closing';
 
+  // Status badge HTML
   let statusBadge = '';
   if(isStarted)      statusBadge = `<div class="t-status-badge badge-started">🔴 Match Started</div>`;
   else if(isJoined)  statusBadge = `<div class="t-status-badge badge-joined">✓ Joined</div>`;
@@ -892,10 +824,12 @@ function renderCard(t, idx, now) {
   else if(isClosing) statusBadge = `<div class="t-status-badge badge-closing">⚡ Closing Soon</div>`;
   else               statusBadge = `<div class="t-status-badge badge-open">Open</div>`;
 
+  // Slots bar color
   let slotFillClass = '';
   if(slotPct >= 90) slotFillClass = 'full';
   else if(slotPct >= 70) slotFillClass = 'almost';
 
+  // Countdown text
   let cdText = '', cdClass = 'normal';
   if(isStarted){
     cdText = 'Match has started'; cdClass = 'started';
@@ -903,15 +837,12 @@ function renderCard(t, idx, now) {
     const h = Math.floor(diff / 3600000);
     const m = Math.floor((diff % 3600000) / 60000);
     const s = Math.floor((diff % 60000) / 1000);
-    if(diff < 60000)       { cdText = s + 's';          cdClass = 'urgent'; }
-    else if(diff < 300000) { cdText = `${m}m ${s}s`;    cdClass = 'soon'; }
-    else if(diff < 3600000){ cdText = `${m}m ${s}s`;    cdClass = 'normal'; }
-    else                   { cdText = `${h}h ${m}m`;    cdClass = 'normal'; }
+    if(diff < 60000){ cdText = `${s}s`; cdClass='urgent'; }
+    else if(diff < 3600000){ cdText = `${m}m ${s}s`; cdClass = diff<300000?'soon':'normal'; }
+    else { cdText = `${h}h ${m}m`; cdClass='normal'; }
   }
 
-  // FIX: Escape name for JS attribute usage
-  const safeName = (data.name || 'Tournament').replace(/['"\\]/g, '');
-
+  // Action button
   let actionBtn = '';
   if(isStarted){
     if(isJoined && data.roomLink){
@@ -927,53 +858,54 @@ function renderCard(t, idx, now) {
     } else {
       actionBtn = `<div class="btn-joined">✓ Joined — Room ID at 6:55 PM</div>`;
     }
-  } else if(isFull){
-    actionBtn = `<div class="btn-closed">🔒 Match Full</div>`;
+  } else if(isFull || isStarted){
+    actionBtn = `<div class="btn-closed">🔒 ${isFull?'Match Full':'Closed'}</div>`;
   } else if(isClosing){
     actionBtn = `<div class="btn-closed">🔒 Registration Closed</div>`;
-  } else if(walletBalance < entryFee){
+  } else if(walletBalance < (data.entry_fee || 20)){
     actionBtn = `
-      <button class="btn-join" disabled>💳 Join — ₹${entryFee}</button>
+      <button class="btn-join" disabled>💳 Join — ₹${data.entry_fee||20}</button>
       <a href="addmoney.html" class="btn-addmoney">+ Add Money</a>`;
   } else {
     actionBtn = `
       <button class="btn-join" id="joinbtn-${id}"
-        onclick="openJoinModal('${id}','${safeName}',${entryFee},${prize},'${formattedDate} ${formattedTime}')">
-        🎮 Join — ₹${entryFee}
+        onclick="openJoinModal('${id}','${(data.name||'Tournament').replace(/'/g,'\\\')}',${data.entry_fee||20},${data.winning_prize||800},'${formattedDate} ${formattedTime}')">
+        🎮 Join — ₹${data.entry_fee||20}
+        <div class="btn-spinner" id="spinner-${id}"></div>
       </button>`;
   }
 
   return `
     <div class="t-card ${statusClass}" id="card-${id}">
       <div class="t-card-img">
-        <img src="${img}" alt="${safeName}" loading="lazy">
+        <img src="${img}" alt="${data.name||'Tournament'}" loading="lazy">
         <div class="t-card-img-overlay"></div>
         ${statusBadge}
-        <div class="t-prize-badge">₹${prize}<small>Prize Pool</small></div>
+        <div class="t-prize-badge">₹${data.winning_prize||800}<small>Prize Pool</small></div>
       </div>
       <div class="t-card-body">
         <div class="t-card-top">
           <div>
-            <div class="t-card-name">${data.name || 'Daily Tournament'}</div>
+            <div class="t-card-name">${data.name||'Daily Tournament'}</div>
             <div class="t-card-type">Free Fire · ${data.mode||'Solo'} · ${formattedDate} ${formattedTime}</div>
           </div>
         </div>
 
         <div class="t-info-grid">
           <div class="t-info-item">
-            <span class="t-info-val orange">₹${entryFee}</span>
+            <span class="t-info-val orange">₹${data.entry_fee||20}</span>
             <span class="t-info-label">Entry Fee</span>
           </div>
           <div class="t-info-item">
-            <span class="t-info-val yellow">₹${prize}</span>
+            <span class="t-info-val yellow">₹${data.winning_prize||800}</span>
             <span class="t-info-label">Prize Pool</span>
           </div>
           <div class="t-info-item">
-            <span class="t-info-val green">₹${perKill}</span>
+            <span class="t-info-val green">₹${data.per_kill||10}</span>
             <span class="t-info-label">Per Kill</span>
           </div>
           <div class="t-info-item">
-            <span class="t-info-val white">${playerCount}/${maxP}</span>
+            <span class="t-info-val white">${playerCount}/${data.maxPlayers||50}</span>
             <span class="t-info-label">Players</span>
           </div>
         </div>
@@ -1001,38 +933,29 @@ function renderCard(t, idx, now) {
     </div>`;
 }
 
-// ─── Countdown Loop ───────────────────────────────────────────────────────────
-function startCountdownLoop() {
+// ── COUNTDOWN LOOP ──
+function startCountdownLoop(){
   if(countdownTimer) clearInterval(countdownTimer);
   countdownTimer = setInterval(() => {
     const now = Date.now();
-    let needsRerender = false;
-
     tournaments.forEach(t => {
       const el = document.getElementById('cd-' + t.id);
       if(!el) return;
-      const matchTime = t.data.datetime.toDate ? t.data.datetime.toDate() : new Date(t.data.datetime);
-      const diff = matchTime.getTime() - now;
-
+      const diff = t.data.datetime.toDate().getTime() - now;
       if(diff <= 0){
         el.textContent = 'Match started';
         el.className = 'countdown-time started';
-        // FIX: Trigger re-render when status changes to started
-        if(!el.dataset.started){ el.dataset.started='1'; needsRerender=true; }
         return;
       }
       const h = Math.floor(diff / 3600000);
       const m = Math.floor((diff % 3600000) / 60000);
       const s = Math.floor((diff % 60000) / 1000);
-
       if(diff < 60000){
         el.textContent = s + 's';
         el.className = 'countdown-time urgent';
       } else if(diff < 300000){
         el.textContent = `${m}m ${s}s`;
         el.className = 'countdown-time soon';
-        // Trigger re-render when crossing into closing window
-        if(!el.dataset.closing){ el.dataset.closing='1'; needsRerender=true; }
       } else if(diff < 3600000){
         el.textContent = `${m}m ${s}s`;
         el.className = 'countdown-time normal';
@@ -1040,22 +963,22 @@ function startCountdownLoop() {
         el.textContent = `${h}h ${m}m`;
         el.className = 'countdown-time normal';
       }
+      // Re-render full card when crossing 5-min threshold
+      if(diff <= 300000 && diff > 299000) renderAll();
     });
-
-    if(needsRerender) renderAll();
   }, 1000);
 }
 
-// ─── Filter ───────────────────────────────────────────────────────────────────
-function setFilter(f, btn) {
+// ── FILTER ──
+function setFilter(f, btn){
   currentFilter = f;
   document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderAll();
 }
 
-// ─── Join Modal ───────────────────────────────────────────────────────────────
-function openJoinModal(id, name, fee, prize, time) {
+// ── JOIN MODAL ──
+function openJoinModal(id, name, fee, prize, time){
   pendingJoin = {id, name, fee, prize, time};
   document.getElementById('modal-tname').textContent  = name;
   document.getElementById('modal-fee').textContent    = '₹' + fee;
@@ -1063,62 +986,53 @@ function openJoinModal(id, name, fee, prize, time) {
   document.getElementById('modal-time').textContent   = time;
   document.getElementById('modal-balance').textContent = walletBalance;
   document.getElementById('modal-after').textContent  = walletBalance - fee;
-
-  // Reset button state
-  const btn  = document.getElementById('modal-confirm-btn');
-  const text = document.getElementById('modal-btn-text');
-  const spin = document.getElementById('modal-spinner');
-  btn.disabled = false;
-  text.textContent = 'Confirm & Join →';
-  spin.style.display = 'none';
-
   document.getElementById('confirm-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
-function closeModal() {
+function closeModal(){
   document.getElementById('confirm-modal').classList.remove('open');
   document.body.style.overflow = '';
   pendingJoin = null;
 }
-
-function closeModalOutside(e) {
+function closeModalOutside(e){
   if(e.target === document.getElementById('confirm-modal')) closeModal();
 }
 
-// ─── Confirm Join ─────────────────────────────────────────────────────────────
-async function confirmJoin() {
+// ── CONFIRM JOIN ──
+async function confirmJoin(){
   if(!pendingJoin) return;
   const {id, fee} = pendingJoin;
 
+  // Re-check balance
   if(walletBalance < fee){
     closeModal();
-    showToast('❌ Not enough wallet balance. Add money first.', 't-error');
+    showToast('❌ Not enough wallet balance. Add money first.','t-error');
     return;
   }
 
+  // Check not already joined
   if(joinedSet.has(id)){
     closeModal();
-    showToast('⚠️ You have already joined this tournament.', 't-warn');
+    showToast('⚠️ You have already joined this tournament.','t-warn');
     return;
   }
 
+  // Loading
   const btn  = document.getElementById('modal-confirm-btn');
   const text = document.getElementById('modal-btn-text');
   const spin = document.getElementById('modal-spinner');
-  btn.disabled = true;
-  text.textContent = 'Joining...';
-  spin.style.display = 'block';
+  btn.disabled=true; text.textContent='Joining...'; spin.style.display='block';
 
   try {
     const tData = tournaments.find(t => t.id === id);
     if(!tData) throw new Error('Tournament not found');
 
-    // Check capacity
+    // Check capacity again
     const snap = await db.collection('tournamentPlayers').doc(id).collection('players').get();
     if(snap.size >= (tData.data.maxPlayers || 50)){
       closeModal();
-      showToast('❌ Match is now full. You were too late!', 't-error');
+      showToast('❌ Match is now full. You were too late!','t-error');
       return;
     }
 
@@ -1131,53 +1045,46 @@ async function confirmJoin() {
 
     if(!result.committed){
       closeModal();
-      showToast('❌ Wallet deduction failed. Check your balance.', 't-error');
+      showToast('❌ Wallet deduction failed. Check your balance.','t-error');
       return;
     }
 
-    // Get user profile
+    // Get user data for player record
     const userSnap = await rtdb.ref('users/' + currentUser.uid).once('value');
     const userData = userSnap.val() || {};
 
-    // Save player record
+    // Save to Firestore
     await db.collection('tournamentPlayers').doc(id).collection('players').doc(currentUser.uid).set({
-      uid:      currentUser.uid,
-      name:     userData.name || userData.username || '',
-      ffuid:    userData.freefire_uid || '',
-      ffname:   userData.freefire_name || '',
-      kills:    0,
-      prize:    0,
-      joinedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      uid:       currentUser.uid,
+      name:      userData.name || userData.username || '',
+      ffuid:     userData.freefire_uid || '',
+      ffname:    userData.freefire_name || '',
+      kills:     0,
+      prize:     0,
+      joinedAt:  firebase.firestore.FieldValue.serverTimestamp(),
     });
 
-    // Mark joined in RTDB
+    // Mark as joined in RTDB
     await rtdb.ref('users/' + currentUser.uid + '/joinedTournaments/' + id).set(true);
 
-    // Update local state immediately (listener will also fire)
+    // Update local state
     joinedSet.add(id);
     closeModal();
-    showToast('✅ You\'re in! Room ID will be sent at 6:55 PM. Stay ready!', 't-success');
+    showToast('✅ You\'re in! Room ID will be sent at 6:55 PM. Stay ready!','t-success');
     renderAll();
 
-  } catch(err) {
-    console.error('Join error:', err);
+  } catch(err){
+    console.error(err);
     closeModal();
-
-    // FIX: Reset button state on error
-    btn.disabled = false;
-    text.textContent = 'Confirm & Join →';
-    spin.style.display = 'none';
-
     let msg = '❌ Something went wrong. Please try again.';
-    if(err.code === 'permission-denied')       msg = '❌ Permission denied. Please log in again.';
-    if(err.code === 'network-request-failed')  msg = '❌ No internet connection.';
-    if(err.message === 'Tournament not found') msg = '❌ Tournament no longer available.';
-    showToast(msg, 't-error');
+    if(err.code === 'permission-denied') msg = '❌ Permission denied. Please log in again.';
+    if(err.code === 'network-request-failed') msg = '❌ No internet connection.';
+    showToast(msg,'t-error');
   }
 }
 
-// ─── Toast ────────────────────────────────────────────────────────────────────
-function showToast(msg, type='t-success') {
+// ── TOAST ──
+function showToast(msg, type='t-success'){
   const t = document.getElementById('toast');
   t.innerHTML = msg;
   t.className = 'toast show ' + type;

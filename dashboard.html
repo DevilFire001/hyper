@@ -727,14 +727,12 @@ nav{
     </div>
   </div>
 
- <div class="nav-right">
-  <!-- Wallet -->
-  <div class="wallet-pill" 
-       onclick="showToast('💳 Wallet coming soon in Phase 3!','t-info'); window.location.href='withdraw.html';">
-    <span class="wp-icon">💰</span>
-    ₹<span id="nav-wallet">0</span>
-  </div>
-</div>
+  <div class="nav-right">
+    <!-- Wallet -->
+    <div class="wallet-pill" onclick="showToast('💳 Wallet coming soon in Phase 3!','t-info')">
+      <span class="wp-icon">💰</span>
+      ₹<span id="nav-wallet">0</span>
+    </div>
 
     <!-- Notif -->
     <div class="notif-btn" onclick="showToast('🔔 Tonight\'s match starts at 7 PM! Entry ₹20','t-info')">
@@ -803,7 +801,7 @@ nav{
       <a href="https://chat.whatsapp.com/PLACEHOLDER" target="_blank" class="sidebar-item">
         <span class="sidebar-icon">💬</span> WhatsApp Group
       </a>
-      <a href="mailto:itshyperclutch@gmail.com" class="sidebar-item">
+      <a href="/cdn-cgi/l/email-protection#18716c6b7061687d6a7b746d6c7b70587f75797174367b7775" class="sidebar-item">
         <span class="sidebar-icon">✉️</span> Contact Us
       </a>
       <button class="sidebar-item danger" onclick="logout()" style="color:var(--red);">
@@ -1053,9 +1051,9 @@ nav{
 <div class="toast" id="toast"></div>
 
 <!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
 // Firebase
@@ -1063,11 +1061,13 @@ const firebaseConfig = {
   apiKey:"AIzaSyDIA2I6-htEdMxbxxsqKkeUlq86vJjOpRo",
   authDomain:"hyperclutch.firebaseapp.com",
   projectId:"hyperclutch",
+  databaseURL:"https://hyperclutch-default-rtdb.firebaseio.com/",
   appId:"1:781538384038:web:002bb30ad711c3deb3fc67"
 };
 if(!firebase.apps.length){ firebase.initializeApp(firebaseConfig); }
 const auth = firebase.auth();
 const db   = firebase.firestore();
+const rtdb = firebase.database(); // wallet lives here, NOT Firestore
 
 // ── AUTH GUARD ──
 auth.onAuthStateChanged(user => {
@@ -1075,6 +1075,13 @@ auth.onAuthStateChanged(user => {
     window.location.href = 'login.html';
     return;
   }
+  // Wallet is in RTDB — live listener keeps all wallet displays in sync
+  rtdb.ref('users/' + user.uid + '/wallet').on('value', snap => {
+    const w = snap.val() || 0;
+    document.getElementById('nav-wallet').textContent  = w;
+    document.getElementById('stat-wallet').textContent = '₹' + w;
+    document.getElementById('wc-balance').textContent  = '₹' + w;
+  });
   loadUserData(user);
 });
 
@@ -1085,7 +1092,7 @@ async function loadUserData(user){
     const data = doc.exists ? doc.data() : {};
 
     const name     = data.username || user.displayName || 'Champion';
-    const wallet   = data.wallet   || 0;
+    // wallet is in RTDB — populated by live listener below, not Firestore
     const matches  = data.matchesPlayed  || 0;
     const wins     = data.matchesWon     || 0;
     const earnings = data.totalWinnings  || 0;
@@ -1093,15 +1100,13 @@ async function loadUserData(user){
 
     // Populate UI
     document.getElementById('wb-username').textContent    = name;
-    document.getElementById('nav-wallet').textContent     = wallet;
+    // nav-wallet, stat-wallet, wc-balance updated live by RTDB listener
     document.getElementById('nav-avatar').textContent     = initials;
     document.getElementById('dd-name').textContent        = name;
     document.getElementById('dd-email').textContent       = user.email || '';
     document.getElementById('stat-matches').textContent   = matches;
     document.getElementById('stat-wins').textContent      = wins;
     document.getElementById('stat-earnings').textContent  = '₹' + earnings;
-    document.getElementById('stat-wallet').textContent    = '₹' + wallet;
-    document.getElementById('wc-balance').textContent     = '₹' + wallet;
 
     // Leaderboard — show current user
     const myLb = document.getElementById('my-lb-item');
@@ -1209,9 +1214,4 @@ function setActive(el){
 // ── LOGOUT ──
 function logout(){
   auth.signOut()
-    .then(() => window.location.href = 'login.html')
-    .catch(err => showToast('❌ Logout failed: ' + err.message, 't-error'));
-}
-</script>
-</body>
-</html>
+    

@@ -1,0 +1,231 @@
+rules_version = '2';
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║         HYPERCLUTCH — FIRESTORE SECURITY RULES              ║
+// ║         Production-ready · Anti-cheat · Anti-fraud          ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─────────────────────────────────────────
+    //  HELPER FUNCTIONS
+    // ─────────────────────────────────────────
+
+    // Is the request from the platform admin?
+    function isAdmin() {
+      return request.auth != null
+          && request.auth.uid == "qeGyCVDkhdR3dVBPPqgbREjYMUT2";
+    }
+
+    // Is the request from a specific user?
+    function isUser(userId) {
+      return request.auth != null
+          && request.auth.uid == userId;
+    }
+
+    // Is any user signed in?
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Is the incoming data field value a non-empty string?
+    function isNonEmptyString(val) {
+      return val is string && val.size() > 0;
+    }
+
+    // Is the value a non-negative integer?
+    function isNonNegativeInt(val) {
+      return val is int && val >= 0;
+    }
+
+    // Does the incoming write NOT touch the wallet field?
+    // (wallet lives in Realtime Database — never in Firestore)
+    function noWalletField() {
+      return !("wallet" in request.resource.data);
+    }
+
+    // Does the incoming write NOT touch any sensitive/admin-only fields?
+    function noSensitiveFields() {
+      return !("wallet"         in request.resource.data)
+          && !("matchesPlayed"  in request.resource.data)
+          && !("matchesWon"     in request.resource.data)
+          && !("totalWinnings"  in request.resource.data);
+    }
+
+    // ─────────────────────────────────────────
+    //  USERS  /users/{userId}
+    // ─────────────────────────────────────────
+    // Read  → own user OR admin
+    // Create → own user only (on signup)
+    // Update → own user BUT cannot touch wallet or match stats
+    //          (matchesPlayed / matchesWon / totalWinnings updated by admin only)
+    // Delete → admin only
+    // ─────────────────────────────────────────
+    match /users/{userId} {
+
+      allow read: if isUser(userId) || isAdmin();
+
+      // Signup — allowed fields defined in signup.html
+      // Must NOT include wallet (wallet is RTDB only)
+      allow create: if isUser(userId)
+          && noWalletField()
+          && request.resource.data.uid == userId
+          && isNonEmptyString(request.resource.data.username)
+          && isNonEmptyString(request.resource.data.email);
+
+      // Profile update — user can edit profile fields only
+      // Cannot touch wallet, matchesPlayed, matchesWon, totalWinnings
+      allow update: if isUser(userId)
+          && noSensitiveFields();
+
+      // Admin can update everything (including stats after match)
+      allow update: if isAdmin();
+
+      // Only admin can delete a user doc
+      // (our deleteAccount() uses update with accountDeleted:true instead)
+      allow delete: if isAdmin();
+    }
+
+    // ─────────────────────────────────────────
+    //  TOURNAMENTS  /tournaments/{tournamentId}
+    // ─────────────────────────────────────────
+    // Anyone can read tournament listings (including logged-out)
+    // Only admin can create / edit / delete tournaments
+    // ─────────────────────────────────────────
+    match /tournaments/{tournamentId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ─────────────────────────────────────────
+    //  TOURNAMENT PLAYERS
+    //  /tournamentPlayers/{tournamentId}/players/{playerId}
+    // ─────────────────────────────────────────
+    // Parent doc read → signed in users only
+    // Player doc create → user can join once, must pass validation
+    // Player doc read   → signed in users (for slot count)
+    // Player doc update / delete → admin only (anti-cheat)
+    // ─────────────────────────────────────────
+    match /tournamentPlayers/{tournamentId} {
+
+      // Allow reading the parent doc (for real-time slot listener)
+      allow read: if isSignedIn();
+
+      match /players/{playerId} {
+
+        // JOIN VALIDATION — all of these must pass:
+        // 1. The joiner is the same person as the playerId doc
+        // 2. They haven't already joined (doc must not exist)
+        // 3. uid field == their auth uid
+        // 4. kills must start at 0 (anti-cheat)
+        // 5. name must be a string
+        // 6. ffuid must be a string
+        // 7. prize must start at 0 (anti-cheat)
+        allow create: if isUser(playerId)
+            && !exists(/databases/$(database)/documents/tournamentPlayers/$(tournamentId)/players/$(playerId))
+            && request.resource.data.uid    == request.auth.uid
+            && request.resource.data.kills  == 0
+            && request.resource.data.prize  == 0
+            && request.resource.data.name   is string
+            && request.resource.data.ffuid  is string;
+
+        // Any signed-in user can read player list (for leaderboard/count)
+        allow read: if isSignedIn();
+
+        // Only admin can update kills, prize, rank after match
+        // Only admin can remove a player (disqualification)
+        allow update, delete: if isAdmin();
+      }
+    }
+
+    // ─────────────────────────────────────────
+    //  TOURNAMENT RESULTS
+    //  /tournamentResults/{tournamentId}
+    // ─────────────────────────────────────────
+    // Public read — anyone can see results
+    // Admin only writes results after match ends
+    // ─────────────────────────────────────────
+    match /tournamentResults/{tournamentId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+
+      match /players/{playerId} {
+        allow read: if true;
+        allow create, update, delete: if isAdmin();
+      }
+    }
+
+    // ─────────────────────────────────────────
+    //  PAYMENT REQUESTS  /paymentRequests/{requestId}
+    // ─────────────────────────────────────────
+    // User submits when they pay entry fee manually via UPI
+    // User can only create their OWN request
+    // Only owner or admin can read it
+    // Only admin can approve / reject (update status / delete)
+    // ─────────────────────────────────────────
+    match /paymentRequests/{requestId} {
+
+      allow create: if isSignedIn()
+          && request.resource.data.uid    == request.auth.uid
+          && request.resource.data.amount  > 0
+          && isNonEmptyString(request.resource.data.utr)
+          && isNonEmptyString(request.resource.data.phone)
+          // Prevent user from pre-setting status to approved
+          && request.resource.data.status == "pending";
+
+      allow read: if isAdmin()
+          || (isSignedIn() && request.auth.uid == resource.data.uid);
+
+      // Only admin approves, rejects, or deletes payment requests
+      allow update, delete: if isAdmin();
+    }
+
+    // ─────────────────────────────────────────
+    //  PAYMENT HISTORY  /paymentHistory/{historyId}
+    // ─────────────────────────────────────────
+    // Admin writes this after approving a payment request
+    // User can read their own history, admin reads all
+    // ─────────────────────────────────────────
+    match /paymentHistory/{historyId} {
+      allow create, update, delete: if isAdmin();
+      allow read: if isAdmin()
+          || (isSignedIn() && request.auth.uid == resource.data.uid);
+    }
+
+    // ─────────────────────────────────────────
+    //  WITHDRAW REQUESTS  /withdrawRequests/{requestId}
+    // ─────────────────────────────────────────
+    // User submits withdrawal request
+    // Must pass: uid match, amount > 0, valid UPI, status=pending
+    // Only admin processes (update status, send money, delete)
+    // ─────────────────────────────────────────
+    match /withdrawRequests/{requestId} {
+
+      allow create: if isSignedIn()
+          && request.resource.data.uid    == request.auth.uid
+          && request.resource.data.amount  > 0
+          && request.resource.data.amount <= 5000
+          && isNonEmptyString(request.resource.data.upi)
+          && isNonEmptyString(request.resource.data.name)
+          // Prevent user from self-approving
+          && request.resource.data.status == "pending"
+          // Prevent user from setting adminNote
+          && (!("adminNote" in request.resource.data)
+              || request.resource.data.adminNote == "");
+
+      allow read: if isAdmin()
+          || (isSignedIn() && request.auth.uid == resource.data.uid);
+
+      // Only admin approves/rejects/deletes withdrawal requests
+      allow update, delete: if isAdmin();
+    }
+
+    // ─────────────────────────────────────────
+    //  CATCH-ALL — deny everything else
+    // ─────────────────────────────────────────
+    // Firestore denies by default, but this makes it explicit.
+    // Any collection not listed above is fully locked down.
+
+  }
+}
