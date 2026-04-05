@@ -719,7 +719,7 @@ nav{
       <p>HyperClutch is not responsible for technical issues on the player's end (internet, device failure). We are not liable for losses caused by platform downtime beyond our control. We reserve the right to modify these terms at any time with notice via our WhatsApp group or Instagram.</p>
 
       <h3>9. Contact &amp; Disputes</h3>
-      <p>For any issues, contact us at <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ff968b8c97868f9a8d9c938a8b9c97bf98929e9693d19c9092">[email&#160;protected]</a></strong> or on Instagram <strong>@_hyperclutch</strong>. We aim to resolve all disputes within 24 hours.</p>
+      <p>For any issues, contact us at <strong><a href="mailto:itshyperclutch@gmail.com">itshyperclutch@gmail.com</a></strong> or on Instagram <strong>@_hyperclutch</strong>. We aim to resolve all disputes within 24 hours.</p>
     </div>
     <div class="modal-footer">
       <button class="modal-accept" onclick="acceptTnC()">I Accept These Terms →</button>
@@ -728,7 +728,7 @@ nav{
 </div>
 
 <!-- Firebase -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
@@ -912,22 +912,15 @@ async function handleSignup(){
 
     // Save extra info to Firestore
     await db.collection('users').doc(cred.user.uid).set({
-      uid:           cred.user.uid,
-      username:      username,
-      email:         email,
-      phone:         phone,
-      upi:           phone + '@upi',
-      freefire_name: '',
-      freefire_uid:  '',
-      state:         '',
-      createdAt:     firebase.firestore.FieldValue.serverTimestamp(),
+      username: username,
+      email:    email,
+      phone:    phone,
+      upi:      phone + '@upi',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       matchesPlayed: 0,
-      matchesWon:    0,
       totalWinnings: 0,
-      tnc_accepted:  true,
-      age_verified:  true,
-      accountDeleted: false,
-      // NOTE: wallet lives in Firebase Realtime DB, NOT Firestore
+      tnc_accepted: true,
+      age_verified: true,
     });
 
     showToast('Account created! Welcome to HyperClutch 🔥');
